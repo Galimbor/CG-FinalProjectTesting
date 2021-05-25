@@ -64,6 +64,17 @@ void MovingBody::rotateBy(float angle, glm::vec3 rotationAxis)
 
 }
 
+void MovingBody::translateBySpeed(glm::vec3 direction, float deltaTime)
+{
+	direction = glm::normalize(direction);
+	translateBy(direction * moveSpeed * deltaTime);
+}
+
+void MovingBody::rotateBySpeed(float angle, glm::vec3 rotationAxis, float deltaTime)
+{
+	rotateBy(angle * rotSpeed * deltaTime, rotationAxis);
+}
+
 glm::vec3 MovingBody::getPos()
 {
 	return glm::vec3(positionMatrix[3][0], positionMatrix[3][1], positionMatrix[3][2]);

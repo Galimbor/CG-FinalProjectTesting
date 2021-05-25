@@ -34,7 +34,9 @@ public:
 
 	virtual void translateBy(glm::vec3 vector) override;
 
-	void processInput(GLFWwindow* window);
+	void processInput(GLFWwindow* window, float deltaTime);
+
+	void updateLookAt(GLFWwindow* window, float width, float height);
 };
 
 #endif

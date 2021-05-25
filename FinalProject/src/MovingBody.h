@@ -19,6 +19,9 @@ private:
 	glm::vec3 frontVector = glm::vec3(1.0f, 0.0f, 0.0f);
 	glm::vec3 rightVector = glm::vec3(0.0f, 0.0f, 1.0f);
 
+	float moveSpeed = 10.0f;
+	float rotSpeed = 10.0f;
+
 public:
 	MovingBody
 	(
@@ -41,6 +44,9 @@ public:
 	virtual void setRotationAbsolute(float angle, glm::vec3 rotationAxis);
 
 	virtual void rotateBy(float angle, glm::vec3 rotationAxis);
+
+	void translateBySpeed(glm::vec3 direction, float deltaTime);
+	void rotateBySpeed(float angle, glm::vec3 rotationAxis, float deltaTime);
 
 	glm::vec3 getPos();
 	glm::vec3 getScale();

@@ -47,24 +47,32 @@ void PlayerChar::translateBy(glm::vec3 vector)
 	setupCamera();
 }
 
-void PlayerChar::processInput(GLFWwindow* window)
+void PlayerChar::processInput(GLFWwindow* window, float deltaTime)
 {
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		glm::vec3 front = getFrontVector();
-		translateBy(front);
+		translateBySpeed(front, deltaTime);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		glm::vec3 back = -getFrontVector();
-		translateBy(back);
+		translateBySpeed(back, deltaTime);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		glm::vec3 right = getRightVector();
-		translateBy(right);
+		translateBySpeed(right, deltaTime);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		glm::vec3 left = -getRightVector();
-		translateBy(left);
+		translateBySpeed(left, deltaTime);
 	}
+}
+
+void PlayerChar::updateLookAt(GLFWwindow* window, float width, float height)
+{
+	std::vector<glm::vec3> castResults = camera.getMouseCast(window, width, height);
+
+	
+
 }

@@ -19,7 +19,7 @@ public:
     {
         loadModel(path);
     }
-    virtual void Draw(Shader& shader);
+    virtual void Draw(Shader& shader) override;
 
     virtual void setPosAbsolute(glm::vec3 newPos) override;
 

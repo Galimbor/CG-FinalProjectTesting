@@ -50,7 +50,7 @@ public:
     
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material mat_);
-    void Draw(Shader& shader);
+    virtual void Draw(Shader& shader) override;
 private:
     //  render data
     class VAO* vao = nullptr;
