@@ -40,11 +40,28 @@ void MovingBody::setRotationAbsolute(float angle, glm::vec3 rotationAxis)
 {
 	rotationMatrix = glm::mat4(1.0f);
 	rotationMatrix = glm::rotate(rotationMatrix, angle, rotationAxis);
+	glm::vec4 frontVectorTemp = rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	frontVector.x = frontVectorTemp.x;
+	frontVector.y = frontVectorTemp.y;
+	frontVector.z = frontVectorTemp.z;
+	glm::vec4 rightVectorTemp = rotationMatrix * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	rightVector.x = rightVectorTemp.x;
+	rightVector.y = rightVectorTemp.y;
+	rightVector.z = rightVectorTemp.z;
 }
 
 void MovingBody::rotateBy(float angle, glm::vec3 rotationAxis)
 {
 	rotationMatrix = glm::rotate(rotationMatrix, angle, rotationAxis);
+	glm::vec4 frontVectorTemp = rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	frontVector.x = frontVectorTemp.x;
+	frontVector.y = frontVectorTemp.y;
+	frontVector.z = frontVectorTemp.z;
+	glm::vec4 rightVectorTemp = rotationMatrix * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	rightVector.x = rightVectorTemp.x;
+	rightVector.y = rightVectorTemp.y;
+	rightVector.z = rightVectorTemp.z;
+
 }
 
 glm::vec3 MovingBody::getPos()
@@ -55,6 +72,36 @@ glm::vec3 MovingBody::getPos()
 glm::vec3 MovingBody::getScale()
 {
 	return glm::vec3(scaleMatrix[0][0], scaleMatrix[1][1], scaleMatrix[2][2]);
+}
+
+glm::vec3 MovingBody::getFrontVector()
+{
+	return frontVector;
+}
+
+glm::vec3 MovingBody::getRightVector()
+{
+	return rightVector;
+}
+
+void MovingBody::getRotation(float& out_rotationAngle, glm::vec3& out_rotationAxis)
+{
+	//formula taken from: https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
+	out_rotationAngle = glm::acos
+	(
+		(
+			rotationMatrix[0][0] +
+			rotationMatrix[1][1] +
+			rotationMatrix[2][2] -
+			1
+		)
+		/ 2
+	);
+
+	//formula taken from https://en.wikipedia.org/wiki/Rotation_matrix#:~:text=for%20more%20details).-,Conversion%20from%20rotation%20matrix%20and%20to%20axis%E2%80%93angle,axis%20(Euler%20rotation%20theorem).
+	out_rotationAxis.x = rotationMatrix[1][2] - rotationMatrix[2][1];
+	out_rotationAxis.y = rotationMatrix[2][0] - rotationMatrix[0][2];
+	out_rotationAxis.z = rotationMatrix[0][1] - rotationMatrix[1][0];
 }
 
 

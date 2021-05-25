@@ -16,6 +16,9 @@ private:
 	glm::mat4 scaleMatrix = glm::mat4(1.0f);
 	glm::mat4 rotationMatrix = glm::mat4(1.0f);
 
+	glm::vec3 frontVector = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 rightVector = glm::vec3(0.0f, 0.0f, 1.0f);
+
 public:
 	MovingBody
 	(
@@ -42,6 +45,9 @@ public:
 	glm::vec3 getPos();
 	glm::vec3 getScale();
 
-	//void getRotation(std::vector<float>& out_rotationAngle, std::vector<glm::vec3>& out_rotationAxis);
+	glm::vec3 getFrontVector();
+	glm::vec3 getRightVector();
+
+	void getRotation(float& out_rotationAngle, glm::vec3& out_rotationAxis);
 };
 #endif
