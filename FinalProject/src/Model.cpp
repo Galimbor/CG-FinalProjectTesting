@@ -21,7 +21,63 @@ void Model::loadModel(std::string const& path)
 void Model::Draw(Shader& shader)
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].setPosAbsolute(getPos());
+        meshes[i].setScaleAbsolute(getScale());
         meshes[i].Draw(shader);
+    }
+}
+
+void Model::setPosAbsolute(glm::vec3 newPos)
+{
+    MovingBody::setPosAbsolute(newPos);
+    for (unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].setPosAbsolute(newPos);
+    }
+}
+
+void Model::translateBy(glm::vec3 vector)
+{
+    MovingBody::translateBy(vector);
+    for (unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].translateBy(vector);
+    }
+}
+
+void Model::setScaleAbsolute(glm::vec3 newScale)
+{
+    MovingBody::setScaleAbsolute(newScale);
+    for (unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].setScaleAbsolute(newScale);
+    }
+}
+
+void Model::scaleBy(glm::vec3 vector)
+{
+    MovingBody::scaleBy(vector);
+    for (unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].scaleBy(vector);
+    }
+}
+
+void Model::setRotationAbsolute(float angle, glm::vec3 rotationAxis)
+{
+    for (unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].setRotationAbsolute(angle, rotationAxis);
+    }
+}
+
+void Model::rotateBy(float angle, glm::vec3 rotationAxis)
+{
+    for (unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].rotateBy(angle, rotationAxis);
+    }
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene)

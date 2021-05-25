@@ -12,6 +12,7 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+#include "MovingBody.h"
 
 struct Vertex {
     glm::vec3 Position;
@@ -35,13 +36,15 @@ struct Material {
 };
 
 
-class Mesh {
+class Mesh : public MovingBody {
 public:
     // mesh data
     std::vector<Vertex>       vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;
     Material mat;
+
+    glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
 
     glm::mat4 ModelMat;
     

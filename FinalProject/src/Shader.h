@@ -9,6 +9,10 @@
 #include<iostream>
 #include<cerrno>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 std::string get_file_contents(const char* filename);
 
 class Shader
@@ -28,6 +32,7 @@ public:
 	void setInt(const std::string& name, int value) const;
 	void setFloat(const std::string& name, float value) const;
 	void setVec3(const std::string& name, float x, float y, float z) const;
+	void setMat4(const std::string& name, glm::mat4& matrix) const;
 
 	GLuint getUniformLocation(const std::string& name) const;
 private:

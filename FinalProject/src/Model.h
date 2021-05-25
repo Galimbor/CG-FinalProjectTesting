@@ -10,15 +10,28 @@
 
 #include "Shader.h"
 #include "Mesh.h"
+#include "MovingBody.h"
 
-class Model
+class Model : public MovingBody
 {
 public:
     Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
     {
         loadModel(path);
     }
-    void Draw(Shader& shader);
+    virtual void Draw(Shader& shader);
+
+    virtual void setPosAbsolute(glm::vec3 newPos) override;
+
+    virtual void translateBy(glm::vec3 vector) override;
+
+    virtual void setScaleAbsolute(glm::vec3 newScale) override;
+
+    virtual void scaleBy(glm::vec3 vector) override;
+
+    virtual void setRotationAbsolute(float angle, glm::vec3 rotationAxis) override;
+
+    virtual void rotateBy(float angle, glm::vec3 rotationAxis) override;
 private:
     // model data
     std::vector<Mesh> meshes;

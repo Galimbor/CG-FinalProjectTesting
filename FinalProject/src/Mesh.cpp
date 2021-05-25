@@ -1,6 +1,7 @@
 #include "Mesh.h"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material mat_)
+    : MovingBody()
 {
     this->vertices = vertices;
     this->indices = indices;
@@ -8,6 +9,13 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     this->mat = mat_;
 
     setupMesh();
+
+    
+    for (int i = 0; i < vertices.size(); i++)
+    {
+        center += vertices[i].Position;
+    }
+    center /= vertices.size();
 }
 
 void Mesh::setupMesh()
@@ -34,6 +42,8 @@ void Mesh::setupMesh()
 
 void Mesh::Draw(Shader& shader)
 {
+    MovingBody::Draw(shader);
+
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr = 1;

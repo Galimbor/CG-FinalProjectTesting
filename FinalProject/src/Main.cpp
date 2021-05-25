@@ -11,6 +11,7 @@
 #include"VBO.h"
 #include"EBO.h"
 #include"Model.h"
+#include"Camera.h"
 
 GLfloat vertices[] =
 { //               COORDINATES                  /     COLORS           //
@@ -59,6 +60,7 @@ int main()
 	char mPath[] = "Models/rockModel.obj";
 
 	Model m(mPath);
+	Camera camera;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -67,7 +69,7 @@ int main()
 
 		shaderProgram.Activate();
 
-
+		camera.setActiveCamera(shaderProgram);
 		m.Draw(shaderProgram);
 		
 		glfwSwapBuffers(window);
