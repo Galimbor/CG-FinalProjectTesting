@@ -115,5 +115,13 @@ void MovingBody::getRotation(float& out_rotationAngle, glm::vec3& out_rotationAx
 	out_rotationAxis.z = rotationMatrix[0][1] - rotationMatrix[1][0];
 }
 
+std::vector<float> MovingBody::computeTranslationEquation(float ini_position, float ini_velocity, float accelaration, float elapsedTime)
+{
+	std::vector<float> result = std::vector<float>(2, 0.0f);
+	result[0] = ini_position + ini_velocity * elapsedTime + (accelaration / 2) * elapsedTime * elapsedTime;
+	result[1] = ini_velocity + accelaration * elapsedTime;
+	return result;
+}
+
 
 

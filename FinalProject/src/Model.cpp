@@ -64,6 +64,7 @@ void Model::scaleBy(glm::vec3 vector)
 
 void Model::setRotationAbsolute(float angle, glm::vec3 rotationAxis)
 {
+    MovingBody::setRotationAbsolute(angle, rotationAxis);
     for (unsigned int i = 0; i < meshes.size(); i++)
     {
         meshes[i].setRotationAbsolute(angle, rotationAxis);
@@ -72,6 +73,7 @@ void Model::setRotationAbsolute(float angle, glm::vec3 rotationAxis)
 
 void Model::rotateBy(float angle, glm::vec3 rotationAxis)
 {
+    MovingBody::rotateBy(angle, rotationAxis);
     for (unsigned int i = 0; i < meshes.size(); i++)
     {
         meshes[i].rotateBy(angle, rotationAxis);

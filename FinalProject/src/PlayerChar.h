@@ -13,6 +13,7 @@ class PlayerChar : public Model
 private:
 	Lantern* lantern = nullptr;
 	glm::vec3 lanternAnchorPoint;
+	bool holdingLantern = true;
 
 	Camera camera;
 	float cameraDist;
@@ -39,9 +40,15 @@ public:
 
 	virtual void translateBy(glm::vec3 vector) override;
 
+	virtual void setRotationAbsolute(float angle, glm::vec3 rotationAxis) override;
+
+	virtual void rotateBy(float angle, glm::vec3 rotationAxis) override;
+
 	void processInput(GLFWwindow* window, float deltaTime);
 
-	void updateLookAt(GLFWwindow* window, float width, float height);
+	void updateLookAt(GLFWwindow* window, float width, float height, float deltaTime);
+
+	void throwLantern(float launchSpeed);
 };
 
 #endif

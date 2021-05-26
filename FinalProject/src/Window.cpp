@@ -31,6 +31,7 @@ void Window::doFrameLoop()
 		while (!glfwWindowShouldClose(window))
 		{
 			glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+			glEnable(GL_DEPTH_TEST);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			float currentTime = glfwGetTime();
@@ -40,6 +41,7 @@ void Window::doFrameLoop()
 			mainShader->Activate();
 
 			Syrian->processInput(window, getDeltaTime());
+			Syrian->updateLookAt(window, width, height, getDeltaTime());
 			Syrian->Draw(*mainShader);
 
 			for (int i = 0; i < objectsInScene.size(); i++)

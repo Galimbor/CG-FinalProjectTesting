@@ -19,8 +19,11 @@ private:
 	glm::vec3 frontVector = glm::vec3(1.0f, 0.0f, 0.0f);
 	glm::vec3 rightVector = glm::vec3(0.0f, 0.0f, 1.0f);
 
+protected:
 	float moveSpeed = 10.0f;
 	float rotSpeed = 10.0f;
+
+	float weight = 10.0f;
 
 public:
 	MovingBody
@@ -55,5 +58,8 @@ public:
 	glm::vec3 getRightVector();
 
 	void getRotation(float& out_rotationAngle, glm::vec3& out_rotationAxis);
+
+	//result[0] == new pos && result[1] == new velocity
+	static std::vector<float> computeTranslationEquation(float ini_position, float ini_velocity, float accelaration, float elapsedTime);
 };
 #endif

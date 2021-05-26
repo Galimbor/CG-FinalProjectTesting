@@ -25,7 +25,10 @@ glm::vec3 PlayerChar::getLanternAnchorPoint()
 
 void PlayerChar::setupLantern()
 {
-	lantern->setPosAbsolute(lanternAnchorPoint);
+	if (holdingLantern)
+	{
+		lantern->setPosAbsolute(lanternAnchorPoint);
+	}
 }
 
 PlayerChar::PlayerChar(std::string const& playerCharPath, std::string const& lanternPath, float cameraDist, glm::vec3 cameraLookAtVector)
@@ -52,8 +55,8 @@ void PlayerChar::setPosAbsolute(glm::vec3 newPos)
 {
 	Model::setPosAbsolute(newPos);
 
-	this->lanternAnchorPoint = getLanternAnchorPoint();
-	setupLantern();
+	
+	
 	setupCamera();
 }
 
@@ -61,9 +64,27 @@ void PlayerChar::translateBy(glm::vec3 vector)
 {
 	Model::translateBy(vector);
 
-	this->lanternAnchorPoint = getLanternAnchorPoint();
-	setupLantern();
+	
+	
 	setupCamera();
+}
+
+void PlayerChar::setRotationAbsolute(float angle, glm::vec3 rotationAxis)
+{
+	Model::setRotationAbsolute(angle, rotationAxis);
+	if (holdingLantern)
+	{
+		lantern->setRotationAbsolute(angle, rotationAxis);
+	}
+}
+
+void PlayerChar::rotateBy(float angle, glm::vec3 rotationAxis)
+{
+	Model::rotateBy(angle, rotationAxis);
+	if (holdingLantern)
+	{
+		lantern->rotateBy(angle, rotationAxis);
+	}
 }
 
 void PlayerChar::processInput(GLFWwindow* window, float deltaTime)
@@ -86,14 +107,51 @@ void PlayerChar::processInput(GLFWwindow* window, float deltaTime)
 		glm::vec3 left = -getRightVector();
 		translateBySpeed(left, deltaTime);
 	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		throwLantern(20.0f);
+	}
 }
 
-void PlayerChar::updateLookAt(GLFWwindow* window, float width, float height)
+void PlayerChar::updateLookAt(GLFWwindow* window, float width, float height, float deltaTime)
 {
 	std::vector<glm::vec3> castResults = camera.getMouseCast(window, width, height);
 
 	glm::vec3 direction = castResults[0];
 	glm::vec3 origin = castResults[1];
 
-	
+	float magnitude = -(origin.y / direction.y);
+
+	float x = origin.x + direction.x * magnitude;
+	float z = origin.z + direction.z * magnitude;
+
+	glm::vec3 lookAtPoint = glm::vec3(x, 0.0f, z);
+	lookAtPoint = lookAtPoint - getPos();
+
+	float dotProduct = glm::dot(lookAtPoint, getFrontVector());
+	glm::vec3 crossProduct = glm::cross(lookAtPoint, getFrontVector());
+	float lP_Magnitude = glm::length(lookAtPoint);
+	float fV_Magnitude = glm::length(getFrontVector());
+
+	float angle = glm::acos(dotProduct / (lP_Magnitude * fV_Magnitude));
+	if (angle < 0.01f)
+		angle = 0.0f;
+
+	//std::cout << "lookAtPoint: " << lookAtPoint.x << " " << lookAtPoint.y << " " << lookAtPoint.z << "\n";
+	//std::cout << "origin: " << origin.x << " " << origin.y << " " << origin.z << "\n";
+	//std::cout << "direction: " << direction.x << " " << direction.y << " " << direction.z << "\n";
+	//std::cout << "angle: " << angle << "\n";
+	if (crossProduct.y < 0)
+		rotateBySpeed(angle, glm::vec3(0.0f, 1.0f, 0.0f), deltaTime);
+	else
+	{
+		rotateBySpeed(-angle, glm::vec3(0.0f, 1.0f, 0.0f), deltaTime);
+	}
+	this->lanternAnchorPoint = getLanternAnchorPoint();
+	setupLantern();
+}
+
+void PlayerChar::throwLantern(float launchSpeed)
+{
+	holdingLantern = false;
+	lantern->makeProjectile(launchSpeed);
 }

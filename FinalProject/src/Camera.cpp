@@ -46,7 +46,7 @@ std::vector<glm::vec3> Camera::getMouseCast(GLFWwindow* window, float width, flo
 	std::vector<glm::vec3> result = std::vector<glm::vec3>(2, glm::vec3(0.0f, 0.0f, 0.0f));;
 	double d_cursor_x = 0;
 	double d_cursor_y = 0;
-	glfwGetCursorPos(window, &d_cursor_x, &d_cursor_x);
+	glfwGetCursorPos(window, &d_cursor_x, &d_cursor_y);
 
 	float cursor_x = (float)d_cursor_x;
 	float cursor_y = (float)d_cursor_y;
@@ -66,8 +66,15 @@ std::vector<glm::vec3> Camera::getMouseCast(GLFWwindow* window, float width, flo
 	}
 	else if (projType == ProjectionType::Ortho)
 	{
-		cursor_x = (2.0f * cursor_x / width - 1) * (orthoWidth / 2);
-		cursor_y = -(2.0f * cursor_y / height - 1) * (orthoHeight / 2);
+		//formula modified from https://stackoverflow.com/a/66813405
+		cursor_x = cursor_x * (orthoWidth / width) - (orthoWidth / 2);
+		cursor_y = -(cursor_y * (orthoHeight / height) - (orthoHeight / 2));
+		cursor_x = glm::clamp(cursor_x, -orthoWidth / 2, orthoWidth / 2);
+		cursor_y = glm::clamp(cursor_y, -orthoHeight / 2, orthoHeight / 2);
+
+		//std::cout << "mouse coords" << cursor_x << " " << cursor_y << "\n";
+		//cursor_x = (2.0f * cursor_x / width - 1) * (orthoWidth / 2);
+		//cursor_y = -(2.0f * cursor_y / height - 1) * (orthoHeight / 2);
 
 		glm::vec3 camDirection = glm::normalize(cameraTarget - cameraPos);
 		glm::vec3 cameraRight = glm::normalize(glm::cross(camDirection, cameraUp));
