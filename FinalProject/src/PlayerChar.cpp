@@ -18,6 +18,16 @@ void PlayerChar::setupCamera()
 	//camera.setProjectionAsPerspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1, cameraDist * 2);
 }
 
+glm::vec3 PlayerChar::getLanternAnchorPoint()
+{
+	return getRightVector() * 5.0f + glm::vec3(0.0f, 1.0f, 0.0f) + getPos();
+}
+
+void PlayerChar::setupLantern()
+{
+	lantern->setPosAbsolute(lanternAnchorPoint);
+}
+
 PlayerChar::PlayerChar(std::string const& playerCharPath, std::string const& lanternPath, float cameraDist, glm::vec3 cameraLookAtVector)
 	: Model(playerCharPath)
 {
@@ -25,6 +35,9 @@ PlayerChar::PlayerChar(std::string const& playerCharPath, std::string const& lan
 	this->cameraDist = cameraDist;
 	this->cameraLookAtVector = cameraLookAtVector;
 
+	this->lanternAnchorPoint = getLanternAnchorPoint();
+
+	setupLantern();
 	setupCamera();
 }
 
@@ -38,12 +51,18 @@ void PlayerChar::Draw(Shader& shader)
 void PlayerChar::setPosAbsolute(glm::vec3 newPos)
 {
 	Model::setPosAbsolute(newPos);
+
+	this->lanternAnchorPoint = getLanternAnchorPoint();
+	setupLantern();
 	setupCamera();
 }
 
 void PlayerChar::translateBy(glm::vec3 vector)
 {
 	Model::translateBy(vector);
+
+	this->lanternAnchorPoint = getLanternAnchorPoint();
+	setupLantern();
 	setupCamera();
 }
 
@@ -73,6 +92,8 @@ void PlayerChar::updateLookAt(GLFWwindow* window, float width, float height)
 {
 	std::vector<glm::vec3> castResults = camera.getMouseCast(window, width, height);
 
-	
+	glm::vec3 direction = castResults[0];
+	glm::vec3 origin = castResults[1];
 
+	
 }

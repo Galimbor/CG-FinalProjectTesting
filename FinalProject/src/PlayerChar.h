@@ -12,12 +12,17 @@ class PlayerChar : public Model
 {
 private:
 	Lantern* lantern = nullptr;
+	glm::vec3 lanternAnchorPoint;
 
 	Camera camera;
 	float cameraDist;
 	glm::vec3 cameraLookAtVector;
 
 	void setupCamera();
+
+	void setupLantern();
+
+	glm::vec3 getLanternAnchorPoint();
 
 public:
 	PlayerChar
