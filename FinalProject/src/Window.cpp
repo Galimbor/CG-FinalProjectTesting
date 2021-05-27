@@ -40,13 +40,13 @@ void Window::doFrameLoop()
 
 			mainShader->Activate();
 
-			Syrian->processInput(window, getDeltaTime());
-			Syrian->updateLookAt(window, width, height, getDeltaTime());
+			Syrian->processInput(window, width, height, getDeltaTime());
+			Syrian->doBatteryDecay(getDeltaTime());
 			Syrian->Draw(*mainShader);
 
 			for (int i = 0; i < objectsInScene.size(); i++)
 			{
-				objectsInScene[i]->Draw(*mainShader);
+				objectsInScene[i]->Draw(*mainShader, getDeltaTime());
 			}
 
 			glfwSwapBuffers(window);
@@ -84,7 +84,7 @@ void Window::setupScene()
 
 	//put other objects in scene
 	char RockModelPath[] = "Models/rockModel.obj";
-	objectsInScene.push_back(new Model(RockModelPath));
+	objectsInScene.push_back(new PickUps(RockModelPath));
 	objectsInScene.back()->setPosAbsolute(glm::vec3(3.0f, 3.0f, 3.0f));
 }
 

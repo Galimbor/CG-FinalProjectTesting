@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\PickUps.cpp" />
     <ClCompile Include="src\Lantern.cpp" />
     <ClCompile Include="src\PlayerChar.cpp" />
     <ClCompile Include="src\MovingBody.cpp" />
@@ -167,6 +168,7 @@
     <None Include="src\Shaders\default.frag" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\PickUps.h" />
     <ClInclude Include="src\Lantern.h" />
     <ClInclude Include="src\PlayerChar.h" />
     <ClInclude Include="src\MovingBody.h" />

@@ -35,6 +35,7 @@ public:
 	);
 
 	virtual void Draw(Shader& shader);
+	virtual void Draw(Shader& shader, float deltaTime);
 
 	virtual void setPosAbsolute(glm::vec3 newPos);
 

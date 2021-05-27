@@ -41,7 +41,44 @@ void Lantern::doProjectileMov()
 		newPos.x = MovingBody::computeTranslationEquation(launchedPos.x, x_moveSpeed, 0, glfwGetTime() - projectileStartTime)[0];
 		newPos.y = MovingBody::computeTranslationEquation(launchedPos.y, 0, -9.8f, glfwGetTime() - projectileStartTime)[0];
 		newPos.z = MovingBody::computeTranslationEquation(launchedPos.z, z_moveSpeed, 0, glfwGetTime() - projectileStartTime)[0];
+		if (newPos.y < 0.0f)
+		{
+			newPos.y = 0.0f;
+			isProjectile = false;
+			isBouncing = true;
+			bouncePos = newPos;
+			bounceCount = 1;
+			bounceSpeed = -MovingBody::computeTranslationEquation(launchedPos.y, 0, -9.8f, glfwGetTime() - projectileStartTime)[1];
+			bounceStartTime = glfwGetTime();
+		}
 		setPosAbsolute(newPos);
-		std::cout << "newPos: " << newPos.x << " " << newPos.y << " " << newPos.z << "\n";
+		//std::cout << "newPos: " << newPos.x << " " << newPos.y << " " << newPos.z << "\n";
 	}
+
+	if (isBouncing)
+	{
+		doBounces();
+		if (bounceCount > maxBounces)
+		{
+			isBouncing = false;
+		}
+	}
+}
+
+void Lantern::doBounces()
+{
+	glm::vec3 newPos;
+	float x_moveSpeed = speedComps[0] + speedComps[0] * bounceSpeedMod * bounceCount;
+	float y_moveSpeed = bounceSpeed / (bounceCount + 1);
+	float z_moveSpeed = speedComps[1] + speedComps[1] * bounceSpeedMod * bounceCount;
+	newPos.x = MovingBody::computeTranslationEquation(bouncePos.x, x_moveSpeed, 0, glfwGetTime() - bounceStartTime)[0];
+	newPos.y = MovingBody::computeTranslationEquation(bouncePos.y, y_moveSpeed, -9.8f, glfwGetTime() - bounceStartTime)[0];
+	newPos.z = MovingBody::computeTranslationEquation(bouncePos.z, z_moveSpeed, 0, glfwGetTime() - bounceStartTime)[0];
+	if (newPos.y < 0.0f)
+	{
+		newPos.y = 0.0f;
+		bouncePos = newPos;
+		bounceCount++;
+	}
+	setPosAbsolute(newPos);
 }

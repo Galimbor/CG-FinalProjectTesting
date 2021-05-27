@@ -23,6 +23,25 @@ glm::vec3 PlayerChar::getLanternAnchorPoint()
 	return getRightVector() * 5.0f + glm::vec3(0.0f, 1.0f, 0.0f) + getPos();
 }
 
+void PlayerChar::doJump()
+{
+	if (isJumping)
+	{
+		glm::vec3 newPos;
+		newPos.x = 0.0f;
+		newPos.y = MovingBody::computeTranslationEquation(0, jumpSpeed, -9.8f, glfwGetTime() - jumpStartTime)[0];
+		newPos.y = newPos.y - getPos().y;
+		newPos.z = 0.0f;
+		if (getPos().y + newPos.y <= 0.0f)
+		{
+			newPos.y = -getPos().y;
+			isJumping = false;
+		}
+		//std::cout << "jump vector: " << newPos.x << " " << newPos.y << " " << newPos.z << "\n";
+		translateBy(newPos);
+	}
+}
+
 void PlayerChar::setupLantern()
 {
 	if (holdingLantern)
@@ -46,6 +65,7 @@ PlayerChar::PlayerChar(std::string const& playerCharPath, std::string const& lan
 
 void PlayerChar::Draw(Shader& shader)
 {
+	doJump();
 	camera.setActiveCamera(shader);
 	lantern->Draw(shader);
 	Model::Draw(shader);
@@ -55,8 +75,6 @@ void PlayerChar::setPosAbsolute(glm::vec3 newPos)
 {
 	Model::setPosAbsolute(newPos);
 
-	
-	
 	setupCamera();
 }
 
@@ -64,8 +82,6 @@ void PlayerChar::translateBy(glm::vec3 vector)
 {
 	Model::translateBy(vector);
 
-	
-	
 	setupCamera();
 }
 
@@ -87,28 +103,37 @@ void PlayerChar::rotateBy(float angle, glm::vec3 rotationAxis)
 	}
 }
 
-void PlayerChar::processInput(GLFWwindow* window, float deltaTime)
+void PlayerChar::processInput(GLFWwindow* window, float width, float height, float deltaTime)
 {
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		glm::vec3 front = getFrontVector();
-		translateBySpeed(front, deltaTime);
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		glm::vec3 back = -getFrontVector();
-		translateBySpeed(back, deltaTime);
-	}
+	if (!isDead)
+	{
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			glm::vec3 front = getFrontVector();
+			translateBySpeed(front, deltaTime);
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			glm::vec3 back = -getFrontVector();
+			translateBySpeed(back, deltaTime);
+		}
 
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		glm::vec3 right = getRightVector();
-		translateBySpeed(right, deltaTime);
-	}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			glm::vec3 right = getRightVector();
+			translateBySpeed(right, deltaTime);
+		}
 
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		glm::vec3 left = -getRightVector();
-		translateBySpeed(left, deltaTime);
-	}
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-		throwLantern(20.0f);
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			glm::vec3 left = -getRightVector();
+			translateBySpeed(left, deltaTime);
+		}
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+			throwLantern(20.0f);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			jump();
+		}
+
+		updateLookAt(window, width, height, deltaTime);
 	}
 }
 
@@ -119,10 +144,12 @@ void PlayerChar::updateLookAt(GLFWwindow* window, float width, float height, flo
 	glm::vec3 direction = castResults[0];
 	glm::vec3 origin = castResults[1];
 
-	float magnitude = -(origin.y / direction.y);
+	//float magnitude = -(origin.y / direction.y);
+	float magnitude = ( getPos().y - origin.y) / direction.y;
 
 	float x = origin.x + direction.x * magnitude;
 	float z = origin.z + direction.z * magnitude;
+
 
 	glm::vec3 lookAtPoint = glm::vec3(x, 0.0f, z);
 	lookAtPoint = lookAtPoint - getPos();
@@ -152,6 +179,32 @@ void PlayerChar::updateLookAt(GLFWwindow* window, float width, float height, flo
 
 void PlayerChar::throwLantern(float launchSpeed)
 {
-	holdingLantern = false;
-	lantern->makeProjectile(launchSpeed);
+	if (holdingLantern)
+	{
+		holdingLantern = false;
+		lantern->makeProjectile(launchSpeed);
+	}
+}
+
+void PlayerChar::jump()
+{
+	isJumping = true;
+	jumpStartTime = glfwGetTime();
+}
+
+void PlayerChar::doBatteryDecay(float deltaTime)
+{
+	if (!isDead)
+	{
+		currentBatery = glm::clamp(currentBatery - batteryDecayRate * deltaTime, 0.0f, maxBatery);
+		if (getBatteryPercent() <= 0.0f)
+		{
+			isDead = true;
+		}
+	}
+}
+
+float PlayerChar::getBatteryPercent()
+{
+	return currentBatery / maxBatery;
 }

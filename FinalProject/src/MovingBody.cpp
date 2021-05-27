@@ -14,6 +14,11 @@ void MovingBody::Draw(Shader& shader)
 	shader.setMat4("model", ModelMatrix);
 }
 
+void MovingBody::Draw(Shader& shader, float deltaTime)
+{
+	Draw(shader);
+}
+
 void MovingBody::setPosAbsolute(glm::vec3 newPos)
 {
 	positionMatrix = glm::mat4(1.0f);

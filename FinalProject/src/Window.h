@@ -9,6 +9,7 @@
 #include "Shader.h"
 #include "PlayerChar.h"
 #include "MovingBody.h"
+#include "PickUps.h"
 
 class Window
 {

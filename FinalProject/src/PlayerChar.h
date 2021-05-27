@@ -19,11 +19,25 @@ private:
 	float cameraDist;
 	glm::vec3 cameraLookAtVector;
 
+	bool isJumping = false;
+	float jumpSpeed = 10.0f;
+	float jumpStartTime = 0.0f;
+
+	int score = 0;
+
+	float maxBatery = 100.0f;
+	float currentBatery = maxBatery;
+	float batteryDecayRate = 2.0f;
+
+	bool isDead = false;
+
 	void setupCamera();
 
 	void setupLantern();
 
 	glm::vec3 getLanternAnchorPoint();
+
+	void doJump();
 
 public:
 	PlayerChar
@@ -44,11 +58,17 @@ public:
 
 	virtual void rotateBy(float angle, glm::vec3 rotationAxis) override;
 
-	void processInput(GLFWwindow* window, float deltaTime);
+	void processInput(GLFWwindow* window, float width, float height, float deltaTime);
 
 	void updateLookAt(GLFWwindow* window, float width, float height, float deltaTime);
 
 	void throwLantern(float launchSpeed);
+
+	void jump();
+
+	void doBatteryDecay(float deltaTime);
+
+	float getBatteryPercent();
 };
 
 #endif

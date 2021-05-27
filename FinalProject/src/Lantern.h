@@ -20,9 +20,19 @@ private:
 	float projectileStartTime = 0.0f;
 	glm::vec3 launchedPos;
 
+	bool isBouncing = false;
+	int bounceCount = 0;
+	int maxBounces = 2;
+	float bounceSpeedMod = -0.5;
+	float bounceSpeed = 0.0f;
+	float bounceStartTime = 0.0f;
+	glm::vec3 bouncePos;
+	
+
 	std::vector<float> speedComps = std::vector<float>(2, 0.0f);
 
 	void doProjectileMov();
+	void doBounces();
 };
 
 #endif
