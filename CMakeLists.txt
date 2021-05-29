@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.15)
 
-project (CGr)
+project (CG-MineRushProject)
 
 set(OpenGL_GL_PREFERENCE GLVND)
 
