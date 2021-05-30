@@ -207,6 +207,14 @@ void PlayerChar::updateLookAt(GLFWwindow* window, float width, float height, flo
 
 	glm::vec3 lookAtPoint = glm::vec3(x, 0.0f, z);
 	lookAtPoint = lookAtPoint - getPos();
+	if (glm::length(lookAtPoint) != 0)
+	{
+		lookAtPoint = glm::normalize(lookAtPoint);
+	}
+	else
+	{
+		glm::vec3 lookAtPoint = glm::vec3(1.0f, 0.0f, 0.0);
+	}
 
 	float dotProduct = glm::dot(lookAtPoint, getFrontVector());
 	glm::vec3 crossProduct = glm::cross(lookAtPoint, getFrontVector());
