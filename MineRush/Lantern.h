@@ -15,6 +15,9 @@ public:
 
 	void makeProjectile(float launchSpeed);
 
+protected:
+	virtual void setupColliders() override;
+
 private:
 	bool isProjectile = false;
 	float projectileStartTime = 0.0f;

@@ -3,6 +3,7 @@
 Lantern::Lantern(std::string const& modelPath)
 	: Model(modelPath)
 {
+	setupColliders();
 }
 
 void Lantern::Draw(Shader& shader)
@@ -26,9 +27,22 @@ void Lantern::makeProjectile(float launchSpeed)
 	float frontPlanar_Magnitude = glm::length(frontPlanar);
 
 	float angle = glm::acos(dotProduct / (xAxis_Magnitude * frontPlanar_Magnitude));
+	if (frontPlanar.y > 0.0f)
+	{
+		angle = -angle;
+	}
 
 	speedComps[0] = glm::cos(angle) * moveSpeed;
 	speedComps[1] = -glm::sin(angle) * moveSpeed;
+}
+
+void Lantern::setupColliders()
+{
+	glm::vec3 offset = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 dims = glm::vec3(2.0f, 2.0f, 2.0f);
+	Collider* col = new Collider(CollisionTypes::Overlap, offset, dims);
+
+	colliders.push_back(col);
 }
 
 void Lantern::doProjectileMov()

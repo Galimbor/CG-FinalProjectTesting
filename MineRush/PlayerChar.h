@@ -8,8 +8,18 @@
 #include "Camera.h"
 #include "Lantern.h"
 
+struct SphereCollision
+{
+	glm::vec3 origin;
+	float radius;
+	float squaredRadius;
+};
+
 class PlayerChar : public Model
 {
+protected:
+	virtual void setupColliders() override;
+
 private:
 	Lantern* lantern = nullptr;
 	glm::vec3 lanternAnchorPoint;
@@ -31,13 +41,18 @@ private:
 
 	bool isDead = false;
 
+	SphereCollision collider;
+
 	void setupCamera();
 
 	void setupLantern();
 
 	glm::vec3 getLanternAnchorPoint();
+	glm::vec3 getColliderPos();
 
 	void doJump();
+
+	static bool intersectRaySegmentSphere(glm::vec3 o, glm::vec3 d, glm::vec3 so, float squaredRadius, glm::vec3& ip);
 
 public:
 	PlayerChar
@@ -63,12 +78,15 @@ public:
 	void updateLookAt(GLFWwindow* window, float width, float height, float deltaTime);
 
 	void throwLantern(float launchSpeed);
+	void pickupLantern();
 
 	void jump();
 
 	void doBatteryDecay(float deltaTime);
 
 	float getBatteryPercent();
+
+	void handleCollision(Model* otherModel);
 };
 
 #endif

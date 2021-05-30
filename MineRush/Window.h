@@ -18,7 +18,7 @@ public:
 	Shader* mainShader = nullptr;
 
 	PlayerChar* Syrian = nullptr;
-	std::vector<MovingBody*> objectsInScene;
+	std::vector<Model*> objectsInScene;
 
 
 	Window();
@@ -36,6 +36,8 @@ private:
 	void setupScene();
 
 	void destroy();
+
+	void collisions();
 };
 
 #endif

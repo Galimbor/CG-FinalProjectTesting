@@ -42,6 +42,7 @@ void Window::doFrameLoop()
 
 			Syrian->processInput(window, width, height, getDeltaTime());
 			Syrian->doBatteryDecay(getDeltaTime());
+			collisions();
 			Syrian->Draw(*mainShader);
 
 			for (int i = 0; i < objectsInScene.size(); i++)
@@ -94,4 +95,12 @@ void Window::destroy()
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
+}
+
+void Window::collisions()
+{
+	for (int i = 0; i < objectsInScene.size(); i++)
+	{
+		Syrian->handleCollision(objectsInScene[i]);
+	}
 }

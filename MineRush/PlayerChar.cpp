@@ -1,5 +1,14 @@
 #include "PlayerChar.h"
 
+void PlayerChar::setupColliders()
+{
+	glm::vec3 offset = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 dims = glm::vec3(2.0f, 4.0f, 2.0f);
+	Collider* col = new Collider(CollisionTypes::Overlap, offset, dims);
+
+	colliders.push_back(col);
+}
+
 void PlayerChar::setupCamera()
 {
 	camera.setPosAbsolute(getPos() + cameraLookAtVector * cameraDist);
@@ -23,6 +32,11 @@ glm::vec3 PlayerChar::getLanternAnchorPoint()
 	return getRightVector() * 5.0f + glm::vec3(0.0f, 1.0f, 0.0f) + getPos();
 }
 
+glm::vec3 PlayerChar::getColliderPos()
+{
+	return getPos();
+}
+
 void PlayerChar::doJump()
 {
 	if (isJumping)
@@ -42,6 +56,39 @@ void PlayerChar::doJump()
 	}
 }
 
+bool PlayerChar::intersectRaySegmentSphere(glm::vec3 o, glm::vec3 d, glm::vec3 so, float squaredRadius, glm::vec3& ip)
+{
+	float l = glm::length(d);
+	d /= l;
+
+	glm::vec3 m = o - so;
+	float b = glm::dot(m, d);
+	float c = glm::dot(m, m) - squaredRadius;
+
+	if (c > 0.0f && b > 0.0f)
+	{
+		return false;
+	}
+	float discr = b * b - c;
+	if (discr < 0.0f)
+	{
+		return false;
+	}
+	float t = -b - sqrtf(discr);
+
+	if (t < 0.0f)
+	{
+		t = 0.0f;
+	}
+	ip = o + (d * t);
+
+	if (t > 1)
+	{
+		return false;
+	}
+	return true;
+}
+
 void PlayerChar::setupLantern()
 {
 	if (holdingLantern)
@@ -59,8 +106,13 @@ PlayerChar::PlayerChar(std::string const& playerCharPath, std::string const& lan
 
 	this->lanternAnchorPoint = getLanternAnchorPoint();
 
+	this->collider.origin = getColliderPos();
+	this->collider.radius = 3.f;
+	this->collider.squaredRadius = this->collider.radius * this->collider.radius;
+
 	setupLantern();
 	setupCamera();
+	setupColliders();
 }
 
 void PlayerChar::Draw(Shader& shader)
@@ -74,6 +126,7 @@ void PlayerChar::Draw(Shader& shader)
 void PlayerChar::setPosAbsolute(glm::vec3 newPos)
 {
 	Model::setPosAbsolute(newPos);
+	this->collider.origin = getColliderPos();
 
 	setupCamera();
 }
@@ -81,6 +134,7 @@ void PlayerChar::setPosAbsolute(glm::vec3 newPos)
 void PlayerChar::translateBy(glm::vec3 vector)
 {
 	Model::translateBy(vector);
+	this->collider.origin = getColliderPos();
 
 	setupCamera();
 }
@@ -186,6 +240,15 @@ void PlayerChar::throwLantern(float launchSpeed)
 	}
 }
 
+void PlayerChar::pickupLantern()
+{
+	if (!holdingLantern)
+	{
+		holdingLantern = true;
+		setupLantern();
+	}
+}
+
 void PlayerChar::jump()
 {
 	isJumping = true;
@@ -207,4 +270,26 @@ void PlayerChar::doBatteryDecay(float deltaTime)
 float PlayerChar::getBatteryPercent()
 {
 	return currentBatery / maxBatery;
+}
+
+void PlayerChar::handleCollision(Model* otherModel)
+{
+	CollisionResult result;
+	for (int i = 0; i < colliders.size() && !result.isColliding; i++)
+	{
+		for (int j = 0; j < otherModel->colliders.size() && !result.isColliding; j++)
+		{
+			result = colliders[i]->isColliding(otherModel->colliders[j]);
+		}
+
+		//coliding with lantern
+		result = colliders[i]->isColliding(lantern->colliders[0]);
+		if (result.isColliding)
+		{
+			pickupLantern();
+		}
+	}
+
+	
+
 }

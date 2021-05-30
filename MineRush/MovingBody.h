@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Shader.h"
+#include "Collider.h"
 
 class MovingBody
 {
@@ -25,7 +26,10 @@ protected:
 
 	float weight = 10.0f;
 
+	virtual void setupColliders();
+
 public:
+	std::vector<Collider*> colliders;
 	MovingBody
 	(
 		glm::vec3 initialPos = glm::vec3(0.0f, 0.0f, 0.0f),

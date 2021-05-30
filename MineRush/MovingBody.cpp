@@ -1,11 +1,16 @@
 #include "MovingBody.h"
 
 
+void MovingBody::setupColliders()
+{
+}
+
 MovingBody::MovingBody(glm::vec3 initialPos, glm::vec3 initialScale, float inicialRotationAngle, glm::vec3 rotationAxis)
 {
 	setPosAbsolute(initialPos);
 	setScaleAbsolute(initialScale);
 	setRotationAbsolute(inicialRotationAngle, rotationAxis);
+
 }
 
 void MovingBody::Draw(Shader& shader)
@@ -23,11 +28,19 @@ void MovingBody::setPosAbsolute(glm::vec3 newPos)
 {
 	positionMatrix = glm::mat4(1.0f);
 	positionMatrix = glm::translate(positionMatrix, newPos);
+	for (int i = 0; i < colliders.size(); i++)
+	{
+		colliders[i]->setPosAbsolute(getPos());
+	}
 }
 
 void MovingBody::translateBy(glm::vec3 vector)
 {
 	positionMatrix = glm::translate(positionMatrix, vector);
+	for (int i = 0; i < colliders.size(); i++)
+	{
+		colliders[i]->setPosAbsolute(getPos());
+	}
 }
 
 void MovingBody::setScaleAbsolute(glm::vec3 newScale)

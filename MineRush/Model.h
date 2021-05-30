@@ -20,6 +20,7 @@ public:
         loadModel(path);
     }
     virtual void Draw(Shader& shader) override;
+    virtual void Draw(Shader& shader, float deltaTime) override;
 
     virtual void setPosAbsolute(glm::vec3 newPos) override;
 
@@ -32,6 +33,8 @@ public:
     virtual void setRotationAbsolute(float angle, glm::vec3 rotationAxis) override;
 
     virtual void rotateBy(float angle, glm::vec3 rotationAxis) override;
+
+    std::vector<Mesh> getMeshes();
 private:
     // model data
     std::vector<Mesh> meshes;

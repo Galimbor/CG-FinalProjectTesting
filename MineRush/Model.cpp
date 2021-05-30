@@ -26,6 +26,11 @@ void Model::Draw(Shader& shader)
     }
 }
 
+void Model::Draw(Shader& shader, float deltaTime)
+{
+    MovingBody::Draw(shader, deltaTime);
+}
+
 void Model::setPosAbsolute(glm::vec3 newPos)
 {
     MovingBody::setPosAbsolute(newPos);
@@ -78,6 +83,11 @@ void Model::rotateBy(float angle, glm::vec3 rotationAxis)
     {
         meshes[i].rotateBy(angle, rotationAxis);
     }
+}
+
+std::vector<Mesh> Model::getMeshes()
+{
+    return this->meshes;
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene)
