@@ -257,6 +257,19 @@ void PlayerChar::pickupLantern()
 	}
 }
 
+void PlayerChar::pickupObject(PickUps* object)
+{
+	this->currentBatery = glm::clamp(
+		this->currentBatery + object->getBatteryCharge(),
+		0.0f,
+		this->maxBatery
+	);
+
+	this->score += object->getScore();
+
+
+}
+
 void PlayerChar::jump()
 {
 	isJumping = true;
@@ -280,16 +293,39 @@ float PlayerChar::getBatteryPercent()
 	return currentBatery / maxBatery;
 }
 
-void PlayerChar::handleCollision(Model* otherModel)
+bool PlayerChar::handleCollision(Model* otherModel)
 {
 	CollisionResult result;
+	bool deleted = false;
 	for (int i = 0; i < colliders.size() && !result.isColliding; i++)
 	{
 		for (int j = 0; j < otherModel->colliders.size() && !result.isColliding; j++)
 		{
 			result = colliders[i]->isColliding(otherModel->colliders[j]);
+			if (result.isColliding)
+			{
+				if (result.colType == CollisionTypes::Overlap)
+				{
+					if (PickUps* temp = dynamic_cast<PickUps*>(otherModel))
+					{
+						pickupObject(temp);
+						deleted = true;
+					}
+				}
+			}
 		}
+	}
 
+
+	return deleted;
+
+}
+
+void PlayerChar::handleLanternCollision()
+{
+	CollisionResult result;
+	for (int i = 0; i < colliders.size() && !result.isColliding; i++)
+	{
 		//coliding with lantern
 		result = colliders[i]->isColliding(lantern->colliders[0]);
 		if (result.isColliding)
@@ -297,7 +333,5 @@ void PlayerChar::handleCollision(Model* otherModel)
 			pickupLantern();
 		}
 	}
-
 	
-
 }

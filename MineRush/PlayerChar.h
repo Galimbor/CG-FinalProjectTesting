@@ -7,6 +7,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Lantern.h"
+#include "PickUps.h"
 
 struct SphereCollision
 {
@@ -79,6 +80,7 @@ public:
 
 	void throwLantern(float launchSpeed);
 	void pickupLantern();
+	void pickupObject(PickUps* object);
 
 	void jump();
 
@@ -86,7 +88,8 @@ public:
 
 	float getBatteryPercent();
 
-	void handleCollision(Model* otherModel);
+	bool handleCollision(Model* otherModel);
+	void handleLanternCollision();
 };
 
 #endif

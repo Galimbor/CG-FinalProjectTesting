@@ -85,8 +85,8 @@ void Window::setupScene()
 
 	//put other objects in scene
 	char RockModelPath[] = "Models/rockModel.obj";
-	objectsInScene.push_back(new PickUps(RockModelPath));
-	objectsInScene.back()->setPosAbsolute(glm::vec3(3.0f, 3.0f, 3.0f));
+	objectsInScene.push_back(new PickUps(RockModelPath, 0.0f, 100.0f));
+	objectsInScene.back()->setPosAbsolute(glm::vec3(3.0f, 0.0f, 3.0f));
 }
 
 void Window::destroy()
@@ -99,8 +99,15 @@ void Window::destroy()
 
 void Window::collisions()
 {
+	std::vector<Model*> newObjectsInScene = std::vector<Model*>(objectsInScene.size(), nullptr);
+	int count = 0;
 	for (int i = 0; i < objectsInScene.size(); i++)
 	{
-		Syrian->handleCollision(objectsInScene[i]);
+		if (!Syrian->handleCollision(objectsInScene[i]))
+		{
+			newObjectsInScene[count++] = objectsInScene[i];
+		}
 	}
+	Syrian->handleLanternCollision();
+	objectsInScene = std::vector<Model*>(newObjectsInScene.begin(), newObjectsInScene.begin() + count);
 }

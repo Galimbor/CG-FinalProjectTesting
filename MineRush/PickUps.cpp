@@ -1,10 +1,23 @@
 #include "PickUps.h"
 #include "MovingBody.h"
 
-PickUps::PickUps(std::string const& modelPath)
+void PickUps::setupColliders()
+{
+
+	glm::vec3 offset = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 dims = glm::vec3(2.0f, 4.0f, 2.0f);
+	Collider* col = new Collider(CollisionTypes::Overlap, offset, dims);
+
+	colliders.push_back(col);
+}
+
+PickUps::PickUps(std::string const& modelPath, float batteryCharge, int score)
 	: Model(modelPath)
 {
 	rotSpeed = 2.0f;
+	setupColliders();
+	this->batteryCharge = batteryCharge;
+	this->score = score;
 }
 
 void PickUps::Draw(Shader& shader, float deltaTime)
