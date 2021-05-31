@@ -20,10 +20,15 @@ void Model::loadModel(std::string const& path)
 
 void Model::Draw(Shader& shader)
 {
+    for (int i = 0; i < colliders.size() && colliders[0]->debugDrawBox; i++)
+    {
+        colliders[0]->DrawDebug(shader);
+    }
     for (unsigned int i = 0; i < meshes.size(); i++)
     {
         meshes[i].Draw(shader);
     }
+
 }
 
 void Model::Draw(Shader& shader, float deltaTime)
