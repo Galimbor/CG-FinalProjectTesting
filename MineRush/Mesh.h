@@ -1,5 +1,4 @@
-#ifndef MESH_CLASS_H
-#define MESH_CLASS_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -39,7 +38,7 @@ struct Material {
 class Mesh : public MovingBody {
 public:
     // mesh data
-    std::vector<Vertex>       vertices;
+    std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;
     Material mat;
@@ -47,7 +46,7 @@ public:
     glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
 
     glm::mat4 ModelMat;
-    
+
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material mat_);
     virtual void Draw(Shader& shader) override;
@@ -59,4 +58,5 @@ private:
 
     void setupMesh();
 };
-#endif
+
+

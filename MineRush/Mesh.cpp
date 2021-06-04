@@ -1,7 +1,7 @@
 #include "Mesh.h"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material mat_)
-    : MovingBody()
+        : MovingBody()
 {
     this->vertices = vertices;
     this->indices = indices;
@@ -10,7 +10,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 
     setupMesh();
 
-    
+
     for (int i = 0; i < vertices.size(); i++)
     {
         center += vertices[i].Position;
@@ -23,20 +23,20 @@ void Mesh::setupMesh()
     vao = new VAO();
     vao->Bind();
 
-	vbo = new VBO(&vertices[0], vertices.size() * sizeof(Vertex));
+    vbo = new VBO(&vertices[0], vertices.size() * sizeof(Vertex));
 
-	ebo = new EBO(&indices[0], indices.size() * sizeof(unsigned int));
+    ebo = new EBO(&indices[0], indices.size() * sizeof(unsigned int));
 
-	//pos vertexes
-	vao->LinkAttrib(*vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
-	vao->LinkAttrib(*vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
-	vao->LinkAttrib(*vbo, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+    //pos vertexes
+    vao->LinkAttrib(*vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
+    vao->LinkAttrib(*vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+    vao->LinkAttrib(*vbo, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
     vao->LinkAttrib(*vbo, 3, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
     vao->LinkAttrib(*vbo, 4, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 
-	vao->Unbind();
-	vbo->Unbind();
-	ebo->Unbind();
+    vao->Unbind();
+    vbo->Unbind();
+    ebo->Unbind();
 }
 
 

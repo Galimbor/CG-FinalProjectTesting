@@ -1,5 +1,4 @@
-﻿#ifndef MODEL_CLASS_H
-#define MODEL_CLASS_H
+﻿#pragma once
 
 #include <vector>
 #include <string>
@@ -35,9 +34,10 @@ public:
     virtual void rotateBy(float angle, glm::vec3 rotationAxis) override;
 
     std::vector<Mesh> getMeshes();
+
+    std::vector<Mesh> meshes;
 private:
     // model data
-    std::vector<Mesh> meshes;
     std::string directory;
     std::vector<Texture> textures_loaded;
     bool gammaCorrection;
@@ -46,9 +46,8 @@ private:
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
     std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type,
-        std::string typeName);
+                                              std::string typeName);
 
     Material loadMaterial(aiMaterial* mat);
 };
 
-#endif

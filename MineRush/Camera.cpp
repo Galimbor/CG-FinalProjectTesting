@@ -1,10 +1,12 @@
 #include "Camera.h"
 
-void Camera::setActiveCamera(Shader& shader)
+void Camera::setActiveCamera(Shader& shader,Shader& mainShader)
 {
 	glm::mat4 view = getCurrentViewMatrix();
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
+	mainShader.setMat4("view", view);
+	mainShader.setMat4("projection", projection);
 }
 
 void Camera::setPosAbsolute(glm::vec3 newPos)
@@ -75,6 +77,7 @@ std::vector<glm::vec3> Camera::getMouseCast(GLFWwindow* window, float width, flo
 		//std::cout << "mouse coords" << cursor_x << " " << cursor_y << "\n";
 		//cursor_x = (2.0f * cursor_x / width - 1) * (orthoWidth / 2);
 		//cursor_y = -(2.0f * cursor_y / height - 1) * (orthoHeight / 2);
+
 
 		glm::vec3 camDirection = glm::normalize(cameraTarget - cameraPos);
 		glm::vec3 cameraRight = glm::normalize(glm::cross(camDirection, cameraUp));

@@ -1,6 +1,4 @@
-#ifndef PLAYERCHAR_CLASS_H
-#define PLAYERCHAR_CLASS_H
-
+#pragma once
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 
@@ -18,38 +16,38 @@ struct SphereCollision
 
 class PlayerChar : public Model
 {
+public:
+    Camera camera;
+    Lantern* lantern = nullptr;
+
 protected:
-	virtual void setupColliders() override;
-
+    void setupColliders() override;
 private:
-	Lantern* lantern = nullptr;
-	glm::vec3 lanternAnchorPoint;
+    glm::vec3 lanternAnchorPoint;
+
 	bool holdingLantern = true;
+    float cameraDist;
+    void setupCamera();
 
-	Camera camera;
-	float cameraDist;
 	glm::vec3 cameraLookAtVector;
+    bool isJumping = false;
+    float jumpSpeed = 10.0f;
 
-	bool isJumping = false;
-	float jumpSpeed = 10.0f;
 	float jumpStartTime = 0.0f;
 
 	int score = 0;
+    float maxBatery = 100.0f;
+    float currentBatery = maxBatery;
 
-	float maxBatery = 100.0f;
-	float currentBatery = maxBatery;
 	float batteryDecayRate = 2.0f;
 
 	bool isDead = false;
 
 	SphereCollision collider;
 
-	void setupCamera();
-
 	void setupLantern();
 
-	glm::vec3 getLanternAnchorPoint();
-	glm::vec3 getColliderPos();
+    glm::vec3 getColliderPos();
 
 	void doJump();
 
@@ -64,7 +62,7 @@ public:
 		glm::vec3 cameraLookAtVector
 	);
 
-	virtual void Draw(Shader& shader) override;
+	virtual void Draw(Shader& shader, Shader& mainShader);
 
 	virtual void setPosAbsolute(glm::vec3 newPos) override;
 
@@ -74,7 +72,7 @@ public:
 
 	virtual void rotateBy(float angle, glm::vec3 rotationAxis) override;
 
-	void processInput(GLFWwindow* window, float width, float height, float deltaTime);
+	void processInput(GLFWwindow *window, float width, float height, float deltaTime, std::vector<Model *> vector);
 
 	void updateLookAt(GLFWwindow* window, float width, float height, float deltaTime);
 
@@ -86,10 +84,16 @@ public:
 
 	void doBatteryDecay(float deltaTime);
 
-	float getBatteryPercent();
+	float getBatteryPercent() const;
 
 	bool handleCollision(Model* otherModel);
-	void handleLanternCollision();
+
+    void handleWallCollision();
+
+    void handleLanternCollision();
+
+    glm::vec3 getLanternAnchorPoint();
+
+    void collisions(std::vector<Model *> vector);
 };
 
-#endif

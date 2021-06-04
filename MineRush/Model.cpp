@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "Camera.h"
 
 void Model::loadModel(std::string const& path)
 {
@@ -20,9 +21,12 @@ void Model::loadModel(std::string const& path)
 
 void Model::Draw(Shader& shader)
 {
-    for (unsigned int i = 0; i < meshes.size(); i++)
+    for (int i = 0; i < colliders.size() && colliders[0]->debugDrawBox; i++)
     {
-        meshes[i].Draw(shader);
+        colliders[0]->DrawDebug(shader);
+    }
+    for (auto & mesh : meshes) {
+        mesh.Draw(shader);
     }
 }
 

@@ -17,6 +17,7 @@ include_directories(
 	external/glm-0.9.7.1/
 	external/stb_image/
 	external/assimp-5.0.1/
+		MineRush/Models
 )
 
 set(ALL_LIBS

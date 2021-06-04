@@ -1,5 +1,4 @@
-#ifndef WINDOW_CLASS_H
-#define WINDOW_CLASS_H
+#pragma once
 
 #include<iostream>
 #include<glad/glad.h>
@@ -16,6 +15,7 @@ class Window
 public:
 	GLFWwindow* window = nullptr;
 	Shader* mainShader = nullptr;
+	Shader* playerShader = nullptr;
 
 	PlayerChar* Syrian = nullptr;
 	std::vector<Model*> objectsInScene;
@@ -35,9 +35,8 @@ private:
 
 	void setupScene();
 
-	void destroy();
+	void destroy() const;
 
 	void collisions();
 };
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef CAMERA_CLASS_H
-#define CAMERA_CLASS_H
+#pragma once
 
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
@@ -33,7 +32,7 @@ private:
 	float orthoHeight;
 
 public: 
-	void setActiveCamera(Shader& shader);
+	void setActiveCamera(Shader& shader, Shader& mainShader);
 
 	void setPosAbsolute(glm::vec3 newPos);
 
@@ -53,4 +52,3 @@ public:
 	glm::mat4 getCurrentViewMatrix();
 };
 
-#endif

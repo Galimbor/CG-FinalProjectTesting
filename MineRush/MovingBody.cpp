@@ -1,5 +1,7 @@
 #include "MovingBody.h"
 
+#include <glm/gtx/io.hpp>
+
 
 void MovingBody::setupColliders()
 {
@@ -10,7 +12,7 @@ MovingBody::MovingBody(glm::vec3 initialPos, glm::vec3 initialScale, float inici
 	setPosAbsolute(initialPos);
 	setScaleAbsolute(initialScale);
 	setRotationAbsolute(inicialRotationAngle, rotationAxis);
-
+    displacement = nullptr;
 }
 
 void MovingBody::Draw(Shader& shader)
@@ -26,21 +28,28 @@ void MovingBody::Draw(Shader& shader, float deltaTime)
 
 void MovingBody::setPosAbsolute(glm::vec3 newPos)
 {
-	positionMatrix = glm::mat4(1.0f);
-	positionMatrix = glm::translate(positionMatrix, newPos);
-	for (int i = 0; i < colliders.size(); i++)
+    positionMatrix = glm::mat4(1.0f);
+    positionMatrix = glm::translate(positionMatrix, newPos);
+    for (auto & collider : colliders)
 	{
-		colliders[i]->setPosAbsolute(getPos());
-	}
+        collider->setPosAbsolute(getPos());
+    }
+//    if(displacement != nullptr) {
+//        displacement->setPosAbsolute(getPos());
+//    }
 }
 
 void MovingBody::translateBy(glm::vec3 vector)
 {
-	positionMatrix = glm::translate(positionMatrix, vector);
-	for (int i = 0; i < colliders.size(); i++)
+
+	for (auto & collider : colliders)
 	{
-		colliders[i]->setPosAbsolute(getPos());
-	}
+        collider->setPosAbsolute(getPos());
+    }
+//    if(displacement != nullptr) {
+//        displacement->setPosAbsolute(getPos());
+//    }
+    positionMatrix = glm::translate(positionMatrix, vector);
 }
 
 void MovingBody::setScaleAbsolute(glm::vec3 newScale)
@@ -82,10 +91,28 @@ void MovingBody::rotateBy(float angle, glm::vec3 rotationAxis)
 
 }
 
+    void MovingBody::calcDisplacement(glm::vec3 direction, float deltaTime) {
+        direction = glm::normalize(direction);
+        glm::vec3 translation = direction * moveSpeed * deltaTime;
+        displacement->setPosAbsolute(getPos()+ translation);
+
+        std::cout << "dis start " << displacement->getBoxStart() << std::endl;
+        std::cout << "dis max " << displacement->getBoxDimentions() << std::endl;
+        std::cout << "col start " << colliders.at(0)->getBoxStart() << std::endl;
+        std::cout << "col max " << colliders.at(0)->getBoxDimentions()<< std::endl;
+}
+
 void MovingBody::translateBySpeed(glm::vec3 direction, float deltaTime)
 {
-	direction = glm::normalize(direction);
-	translateBy(direction * moveSpeed * deltaTime);
+    glm::vec3 translation = direction * moveSpeed * deltaTime;
+
+//    if(xBlocked) {
+//        translateBy(glm::vec3(0,translation.y,translation.z));
+//    }
+//    else
+    if(!(xBlocked && yBlocked && zBlocked))
+        translateBy(translation);
+
 }
 
 void MovingBody::rotateBySpeed(float angle, glm::vec3 rotationAxis, float deltaTime)
@@ -140,6 +167,26 @@ std::vector<float> MovingBody::computeTranslationEquation(float ini_position, fl
 	result[1] = ini_velocity + accelaration * elapsedTime;
 	return result;
 }
+
+//void MovingBody::collisions(std::vector<Model *> objectsInScene)
+//{
+//    std::vector<Model*> newObjectsInScene = std::vector<Model*>(objectsInScene.size(), nullptr);
+//    int count = 0;
+//    std::cout << objectsInScene.size() << std::endl;
+//    for (auto & i : objectsInScene)
+//    {
+//        if (!handleCollision(i))
+//        {
+//            newObjectsInScene[count++] = i;
+//        }
+//        lantern->handleCollision(i);
+//    }
+//
+//    handleLanternCollision();
+//
+//
+//    objectsInScene = std::vector<Model*>(newObjectsInScene.begin(), newObjectsInScene.begin() + count);
+//}
 
 
 

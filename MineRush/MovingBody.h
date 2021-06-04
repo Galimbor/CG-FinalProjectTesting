@@ -1,5 +1,4 @@
-#ifndef MOVINGBODY_CLASS_H
-#define MOVINGBODY_CLASS_H
+#pragma once
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -13,58 +12,66 @@
 class MovingBody
 {
 private:
-	glm::mat4 positionMatrix = glm::mat4(1.0f);
-	glm::mat4 scaleMatrix = glm::mat4(1.0f);
-	glm::mat4 rotationMatrix = glm::mat4(1.0f);
+    glm::mat4 positionMatrix = glm::mat4(1.0f);
+    glm::mat4 scaleMatrix = glm::mat4(1.0f);
 
-	glm::vec3 frontVector = glm::vec3(1.0f, 0.0f, 0.0f);
-	glm::vec3 rightVector = glm::vec3(0.0f, 0.0f, 1.0f);
-
+    glm::vec3 frontVector = glm::vec3(1.0f, 0.0f, 0.0f);
+    glm::vec3 rightVector = glm::vec3(0.0f, 0.0f, 1.0f);
 protected:
-	float moveSpeed = 10.0f;
-	float rotSpeed = 10.0f;
 
-	float weight = 10.0f;
+    float moveSpeed = 10.0f;
 
-	virtual void setupColliders();
+    float rotSpeed = 10.0f;
+    float weight = 10.0f;
+
+    virtual void setupColliders();
 
 public:
-	std::vector<Collider*> colliders;
-	MovingBody
-	(
-		glm::vec3 initialPos = glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3 initialScale = glm::vec3(1.0f, 1.0f, 1.0f),
-		float inicialRotationAngle = 0,
-		glm::vec3 rotationAxis = glm::vec3(0.0f,1.0f,0.0f)
-	);
 
-	virtual void Draw(Shader& shader);
-	virtual void Draw(Shader& shader, float deltaTime);
+    bool yBlocked = false;
+    bool xBlocked = false;
+    bool zBlocked = false;
+    Collider* displacement = nullptr;
+    glm::mat4 rotationMatrix = glm::mat4(1.0f);
 
-	virtual void setPosAbsolute(glm::vec3 newPos);
+    std::vector<Collider*> colliders;
+    MovingBody
+            (
+                    glm::vec3 initialPos = glm::vec3(0.0f, 0.0f, 0.0f),
+                    glm::vec3 initialScale = glm::vec3(1.0f, 1.0f, 1.0f),
+                    float inicialRotationAngle = 0,
+                    glm::vec3 rotationAxis = glm::vec3(0.0f,1.0f,0.0f)
+            );
 
-	virtual void translateBy(glm::vec3 vector);
+    virtual void Draw(Shader& shader);
+    virtual void Draw(Shader& shader, float deltaTime);
 
-	virtual void setScaleAbsolute(glm::vec3 newScale);
+    virtual void setPosAbsolute(glm::vec3 newPos);
 
-	virtual void scaleBy(glm::vec3 vector);
+    virtual void translateBy(glm::vec3 vector);
 
-	virtual void setRotationAbsolute(float angle, glm::vec3 rotationAxis);
+    virtual void setScaleAbsolute(glm::vec3 newScale);
 
-	virtual void rotateBy(float angle, glm::vec3 rotationAxis);
+    virtual void scaleBy(glm::vec3 vector);
 
-	void translateBySpeed(glm::vec3 direction, float deltaTime);
-	void rotateBySpeed(float angle, glm::vec3 rotationAxis, float deltaTime);
+    virtual void setRotationAbsolute(float angle, glm::vec3 rotationAxis);
 
-	glm::vec3 getPos();
-	glm::vec3 getScale();
+    virtual void rotateBy(float angle, glm::vec3 rotationAxis);
 
-	glm::vec3 getFrontVector();
-	glm::vec3 getRightVector();
+    void translateBySpeed(glm::vec3 direction, float deltaTime);
+    void rotateBySpeed(float angle, glm::vec3 rotationAxis, float deltaTime);
 
-	void getRotation(float& out_rotationAngle, glm::vec3& out_rotationAxis);
+    glm::vec3 getPos();
+    glm::vec3 getScale();
 
-	//result[0] == new pos && result[1] == new velocity
-	static std::vector<float> computeTranslationEquation(float ini_position, float ini_velocity, float accelaration, float elapsedTime);
+    glm::vec3 getFrontVector();
+    glm::vec3 getRightVector();
+
+    void getRotation(float& out_rotationAngle, glm::vec3& out_rotationAxis);
+
+    //result[0] == new pos && result[1] == new velocity
+    static std::vector<float> computeTranslationEquation(float ini_position, float ini_velocity, float accelaration, float elapsedTime);
+
+//    void collisions(std::vector<Model *> objectsInScene);
+    void calcDisplacement(glm::vec3 direction, float deltaTime);
 };
-#endif
