@@ -19,13 +19,23 @@ public:
 
     virtual void rotateBy(float angle, glm::vec3 rotationAxis) override;
     void handleCollision(Model *otherModel);
+    bool isInAir() const;
+
+    float getInnerLightRadius();
+    float getOuterLightRadius();
+    void  setInnerLightRadius(float angle);
+    void  setOuterLightRadius(float angle);
+
 
 protected:
     virtual void setupColliders() override;
 
 private:
-    bool isFree = false;
 
+    float innerLightRadius = 23.5f;
+    float outerLightRadius = 30.5f;
+
+    bool isFree = false;
     float projectileStartTime = 0.0f;
     bool isBouncing = false;
     glm::vec3 launchedPos;

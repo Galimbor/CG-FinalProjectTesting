@@ -162,3 +162,23 @@ void Lantern::doBounces() {
     }
     setPosAbsolute(newPos);
 }
+
+bool Lantern::isInAir() const {
+    return isProjectile;
+}
+
+float Lantern::getInnerLightRadius() {
+    return innerLightRadius;
+}
+
+float Lantern::getOuterLightRadius() {
+    return outerLightRadius;
+}
+
+void Lantern::setInnerLightRadius(float angle) {
+    innerLightRadius = angle;
+}
+
+void Lantern::setOuterLightRadius(float angle) {
+    outerLightRadius = angle;
+}

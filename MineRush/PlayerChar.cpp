@@ -32,7 +32,7 @@ void PlayerChar::setupCamera() {
 
 glm::vec3 PlayerChar::getLanternAnchorPoint() {
     //return lantern->getMeshes().at(0).center + getPos();
-    return getPos();
+    return getRightVector()/3.0f + glm::vec3(0, 0.8, 0) + getFrontVector()/2.5f+  getPos();
 }
 
 glm::vec3 PlayerChar::getColliderPos() {
@@ -125,7 +125,6 @@ void PlayerChar::handleLanternWallCollision(std::vector<Model *> objectsInScene)
         std::vector<Model *> newObjectsInScene = std::vector<Model *>(objectsInScene.size(), nullptr);
         for (auto &i : objectsInScene) {
             lantern->handleCollision(i);
-//            std::cout << lantern->getPos() << std::endl;
         }
     }
 }
@@ -372,8 +371,8 @@ void PlayerChar::handleLanternCollision() {
     CollisionResult result;
     for (int i = 0; i < colliders.size() && !result.isColliding; i++) {
         //coliding with lantern
-        result = colliders[i]->isColliding(lantern->colliders[0]);
-        if (result.isColliding) {
+        result = displacement->isColliding(lantern->colliders[0]);
+        if (result.isColliding && !lantern->isInAir()) {
             pickupLantern();
         }
     }

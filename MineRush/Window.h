@@ -37,6 +37,8 @@ private:
 
 	void destroy() const;
 
-	void collisions();
+//	void collisions();
+
+    void processInput(GLFWwindow *window);
 };
 

@@ -31,30 +31,31 @@ void Window::doFrameLoop()
 	{
 		while (!glfwWindowShouldClose(window))
 		{
-
             GLint lightPosLoc = glGetUniformLocation( mainShader->ID, "light.position" );
             GLint lightSpotdirLoc = glGetUniformLocation( mainShader->ID, "light.direction" );
+            GLint viewPosLoc = glGetUniformLocation( mainShader->ID, "viewPos" );
             GLint lightSpotCutOffLoc = glGetUniformLocation( mainShader->ID, "light.cutOff" );
             GLint lightSpotOuterCutOffLoc = glGetUniformLocation( mainShader->ID, "light.outerCutOff" );
-            GLint viewPosLoc = glGetUniformLocation( mainShader->ID, "viewPos" );
-            glUniform3f( lightPosLoc, Syrian->lantern->getPos().x, Syrian->lantern->getPos().y+2.2, Syrian->lantern->getPos().z);
-            glUniform3f( lightSpotdirLoc, Syrian->lantern->getFrontVector().x,Syrian->lantern->getFrontVector().y-1,Syrian->lantern->getFrontVector().z);
-            glUniform1f( lightSpotCutOffLoc, glm::cos( glm::radians( 9.5f ) ) );
-            glUniform1f( lightSpotOuterCutOffLoc, glm::cos( glm::radians( 15.5f ) ) );
-            glUniform3f( viewPosLoc, 0,0,3);
+
+            glUniform1f( lightSpotCutOffLoc, glm::cos( glm::radians( Syrian->lantern->getInnerLightRadius() ) ) );
+            glUniform1f( lightSpotOuterCutOffLoc, glm::cos( glm::radians( Syrian->lantern->getOuterLightRadius()) ) );
+            glUniform3f( lightPosLoc, Syrian->lantern->getPos().x, Syrian->lantern->getPos().y, Syrian->lantern->getPos().z);
+            glUniform3f( lightSpotdirLoc, Syrian->lantern->getFrontVector().x,Syrian->lantern->getFrontVector().y,Syrian->lantern->getFrontVector().z);
+
+            glUniform3f( viewPosLoc, Syrian->getPos().x,Syrian->getPos().y + 0.8, Syrian->getPos().z);
             // Set lights properties
-            glUniform3f( glGetUniformLocation( mainShader->ID, "light.ambient" ),   0.6f, 0.6f, 0.6f );
+            glUniform3f( glGetUniformLocation( mainShader->ID, "light.ambient" ),   0.4f, 0.4f, 0.4f );
             // We set the diffuse intensity a bit higher; note that the right lighting conditions differ with each lighting method and environment.
             // Each environment and lighting type requires some tweaking of these variables to get the best out of your environment.
             glUniform3f( glGetUniformLocation( mainShader->ID, "light.diffuse" ), 0.8f, 0.8f, 0.8f );
             glUniform3f( glGetUniformLocation( mainShader->ID, "light.specular" ), 1.0f, 1.0f, 1.0f );
             glUniform1f( glGetUniformLocation( mainShader->ID, "light.constant" ), 1.0f );
-            glUniform1f( glGetUniformLocation( mainShader->ID, "light.linear" ), 0.09 );
+            glUniform1f( glGetUniformLocation( mainShader->ID, "light.linear" ), 0.09f );
             glUniform1f( glGetUniformLocation( mainShader->ID, "light.quadratic" ), 0.032 );
             glUniform1f( glGetUniformLocation( mainShader->ID, "material.shininess" ), 32.0f );
 
 
-            glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+//            glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 			glEnable(GL_DEPTH_TEST);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -62,8 +63,8 @@ void Window::doFrameLoop()
 			DeltaTime = currentTime - previousFrameTime;
             previousFrameTime = currentTime;
 
-
             Syrian->processInput(window, width, height, getDeltaTime(), objectsInScene);
+            processInput(window);
             Syrian->doBatteryDecay(getDeltaTime());
             playerShader->Activate();
 
@@ -101,8 +102,9 @@ void Window::setupScene()
 	mainShader = new Shader("Shaders/default.vert", "Shaders/default.frag");
 	playerShader = new Shader("Shaders/player.vert","Shaders/player.frag");
 
-	char SyrianModelPath[] = "Models/char.obj";
-	char LanternModelPath[] = "Models/new_lanterna.obj";
+
+	char SyrianModelPath[] = "Models/char_direita_000.obj";
+	char LanternModelPath[] = "Models/lanterna_000.obj";
 	Syrian = new PlayerChar
 	(
 		SyrianModelPath,
@@ -115,15 +117,15 @@ void Window::setupScene()
 	//put other objects in scene
 //	char RockModelPath[] = "Models/rockModel.obj";
 //	char BatteryModelPath[] = "Models/rockModel.obj";
-	char Maze1ModelPath[] = "Models/maze1.obj";
-	char FloorModelPath[] = "Models/chao.obj";
-    auto *maze1= new Maze(Maze1ModelPath);
+	char MazeModelPath[] = "Models/maze2.obj";
+//	char FloorModelPath[] = "Models/maz.obj";
+    auto *maze= new Maze(MazeModelPath);
 //    char Maze2ModelPath[] = "Models/maze2.obj";
 //    auto *maze2= new Maze(MazeModelPath);
-    auto *floor= new Maze(FloorModelPath);
-    objectsInScene.push_back(maze1);
+//    auto *floor= new Maze(FloorModelPath);
+    objectsInScene.push_back(maze);
 //    objectsInScene.push_back(maze2);
-    objectsInScene.push_back(floor);
+//    objectsInScene.push_back(floor);
 //	pickup1->scaleBy(glm::vec3 (0.7,0.7,0.7));
 //	auto *pickup2 = new PickUps(BatteryModelPath, 0.0f, 100.0f);
 //	pickup2->scaleBy(glm::vec3 (0.7,0.7,0.7));
@@ -177,3 +179,30 @@ void Window::destroy() const
 //
 //	objectsInScene = std::vector<Model*>(newObjectsInScene.begin(), newObjectsInScene.begin() + count);
 //}
+
+
+void
+Window::processInput(GLFWwindow *window) {
+    {
+        GLint lightSpotCutOffLoc = glGetUniformLocation( mainShader->ID, "light.cutOff" );
+        GLint lightSpotOuterCutOffLoc = glGetUniformLocation( mainShader->ID, "light.outerCutOff" );
+        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+            Syrian->lantern->setInnerLightRadius(23.5f);
+            Syrian->lantern->setOuterLightRadius(30.5f);
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+            Syrian->lantern->setInnerLightRadius(12.5f);
+            Syrian->lantern->setOuterLightRadius(20.5f);
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+            Syrian->lantern->setInnerLightRadius(7.5f);
+            Syrian->lantern->setOuterLightRadius(12.5f);
+        }
+
+
+
+
+    }
+}
