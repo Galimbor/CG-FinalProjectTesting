@@ -25,7 +25,7 @@ private:
 	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 0.1f, 100.0f);
+	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 0.001f, 100.0f);
 	ProjectionType::Types projType;
 
 	float orthoWidth;

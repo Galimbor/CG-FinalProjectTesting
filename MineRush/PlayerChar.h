@@ -39,9 +39,9 @@ private:
     float maxBatery = 100.0f;
     float currentBatery = maxBatery;
 
-	float batteryDecayRate = 2.0f;
+	float batteryDecayRate = 4.0f;
 
-	bool isDead = false;
+
 
 	SphereCollision collider;
 
@@ -62,6 +62,8 @@ public:
 		glm::vec3 cameraLookAtVector
 	);
 
+    bool isDead = false;
+
 	virtual void Draw(Shader& shader, Shader& mainShader);
 
 	virtual void setPosAbsolute(glm::vec3 newPos) override;
@@ -72,7 +74,7 @@ public:
 
 	virtual void rotateBy(float angle, glm::vec3 rotationAxis) override;
 
-	void processInput(GLFWwindow *window, float width, float height, float deltaTime, std::vector<Model *> vector);
+	void processInput(GLFWwindow *window, float width, float height, float deltaTime, std::vector<Model *>&vector);
 
 	void updateLookAt(GLFWwindow* window, float width, float height, float deltaTime);
 
@@ -94,6 +96,7 @@ public:
 
     glm::vec3 getLanternAnchorPoint();
 
-    void collisions(std::vector<Model *> vector);
+    void collisions(std::vector<Model *> &vector);
+
 };
 

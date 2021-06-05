@@ -39,6 +39,6 @@ private:
 
 //	void collisions();
 
-    void processInput(GLFWwindow *window);
+    void processInput(GLFWwindow *window) const;
 };
 

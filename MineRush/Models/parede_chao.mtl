@@ -1,0 +1,67 @@
+# Blender MTL File: 'mine-maze-s.blend'
+# Material Count: 5
+
+newmtl Material
+Ns 323.999994
+Ka 0.687273 0.687273 0.687273
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Bump -bm 1.200000 basalt_texture/Rock031_1K_Normal.jpg
+map_Kd basalt_texture/Rock031_1K_Color.jpg
+map_Ns basalt_texture/Rock031_1K_Roughness.jpg
+
+newmtl Material.001
+Ns 323.999994
+Ka 0.687273 0.687273 0.687273
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Bump -bm 1.200000 basalt_texture/Rock031_1K_Normal.jpg
+map_Kd basalt_texture/Rock031_1K_Color.jpg
+map_Ns basalt_texture/Rock031_1K_Roughness.jpg
+
+newmtl Material.010
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Bump -bm 1.200000 basalt_texture/Rock031_1K_Normal.jpg
+map_Kd basalt_texture/Rock031_1K_Color.jpg
+map_Ns basalt_texture/Rock031_1K_Roughness.jpg
+
+newmtl rock
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump basalt_texture/Rock031_1K_Normal.jpg
+map_Kd basalt_texture/Rock031_1K_Color.jpg
+map_Ns basalt_texture/Rock031_1K_Roughness.jpg
+
+newmtl texture.001
+Ns 323.999994
+Ka 0.687273 0.687273 0.687273
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Bump -bm 1.200000 basalt_texture/Rock031_1K_Normal.jpg
+map_Kd basalt_texture/Rock031_1K_Color.jpg
+map_Ns basalt_texture/Rock031_1K_Roughness.jpg

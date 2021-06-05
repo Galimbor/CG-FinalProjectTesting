@@ -36,7 +36,6 @@ void Window::doFrameLoop()
             GLint viewPosLoc = glGetUniformLocation( mainShader->ID, "viewPos" );
             GLint lightSpotCutOffLoc = glGetUniformLocation( mainShader->ID, "light.cutOff" );
             GLint lightSpotOuterCutOffLoc = glGetUniformLocation( mainShader->ID, "light.outerCutOff" );
-
             glUniform1f( lightSpotCutOffLoc, glm::cos( glm::radians( Syrian->lantern->getInnerLightRadius() ) ) );
             glUniform1f( lightSpotOuterCutOffLoc, glm::cos( glm::radians( Syrian->lantern->getOuterLightRadius()) ) );
             glUniform3f( lightPosLoc, Syrian->lantern->getPos().x, Syrian->lantern->getPos().y, Syrian->lantern->getPos().z);
@@ -44,7 +43,7 @@ void Window::doFrameLoop()
 
             glUniform3f( viewPosLoc, Syrian->getPos().x,Syrian->getPos().y + 0.8, Syrian->getPos().z);
             // Set lights properties
-            glUniform3f( glGetUniformLocation( mainShader->ID, "light.ambient" ),   0.4f, 0.4f, 0.4f );
+            glUniform3f( glGetUniformLocation( mainShader->ID, "light.ambient" ),   0.2f, 0.2f, 0.2f );
             // We set the diffuse intensity a bit higher; note that the right lighting conditions differ with each lighting method and environment.
             // Each environment and lighting type requires some tweaking of these variables to get the best out of your environment.
             glUniform3f( glGetUniformLocation( mainShader->ID, "light.diffuse" ), 0.8f, 0.8f, 0.8f );
@@ -70,6 +69,7 @@ void Window::doFrameLoop()
 
             Syrian->Draw(*playerShader,*mainShader);
             mainShader->Activate();
+            std::cout << Syrian->getBatteryPercent() << std::endl;
             Syrian->handleLanternWallCollision(objectsInScene);
             Syrian->camera.setActiveCamera(*playerShader,*mainShader);
 
@@ -78,9 +78,12 @@ void Window::doFrameLoop()
                 i->Draw(*mainShader);
             }
 
+
+
             glfwSwapBuffers(window);
 
             glfwPollEvents();
+
         }
         destroy();
 	}
@@ -115,40 +118,33 @@ void Window::setupScene()
 //	Syrian->scaleBy(glm::vec3(0.5f,0.5f,0.5f));
 
 	//put other objects in scene
-//	char RockModelPath[] = "Models/rockModel.obj";
-//	char BatteryModelPath[] = "Models/rockModel.obj";
-	char MazeModelPath[] = "Models/maze2.obj";
-//	char FloorModelPath[] = "Models/maz.obj";
-    auto *maze= new Maze(MazeModelPath);
-//    char Maze2ModelPath[] = "Models/maze2.obj";
-//    auto *maze2= new Maze(MazeModelPath);
-//    auto *floor= new Maze(FloorModelPath);
+
+	char MazeModelPath[] = "Models/parede_chao.obj";
+	char Battery1ModelPath[] = "Models/pilha.obj";
+	char Battery2ModelPath[] = "Models/pilha2.obj";
+	char Battery3ModelPath[] = "Models/pilha3.obj";
+	char Battery4ModelPath[] = "Models/pilha4.obj";
+	char Battery5ModelPath[] = "Models/pilha5.obj";
+	char Battery6ModelPath[] = "Models/pilha6.obj";
+	char UrsoModelPath[] = "Models/urso.obj";
+
+    auto *maze = new Maze(MazeModelPath);
+    auto *urso = new PickUps(UrsoModelPath,0,9999);
+    auto *pilha = new PickUps(Battery1ModelPath, 40.0f, 0);
+    auto *pilha2 = new PickUps(Battery2ModelPath, 100.0f, 0);
+    auto *pilha3 = new PickUps(Battery3ModelPath, 100.0f, 0);
+    auto *pilha4 = new PickUps(Battery4ModelPath, 100.0f, 0);
+    auto *pilha5 = new PickUps(Battery5ModelPath, 100.0f, 0);
+    auto *pilha6 = new PickUps(Battery6ModelPath, 100.0f, 0);
+
     objectsInScene.push_back(maze);
-//    objectsInScene.push_back(maze2);
-//    objectsInScene.push_back(floor);
-//	pickup1->scaleBy(glm::vec3 (0.7,0.7,0.7));
-//	auto *pickup2 = new PickUps(BatteryModelPath, 0.0f, 100.0f);
-//	pickup2->scaleBy(glm::vec3 (0.7,0.7,0.7));
-//	auto *pickup3 = new PickUps(BatteryModelPath, 0.0f, 100.0f);
-//	pickup3->scaleBy(glm::vec3 (0.7,0.7,0.7));
-//	auto *pickup4 = new PickUps(BatteryModelPath, 0.0f, 100.0f);
-//	pickup4->scaleBy(glm::vec3 (0.7,0.7,0.7));
-
-//    auto *pickup5 = new PickUps(MazeModelPath, 0.0f, 100.0f);
-//    pickup5->scaleBy(glm::vec3 (20,20,20));
-//    pickup5->translateBy(glm::vec3(0,1,0));
-
-//    objectsInScene.push_back(pickup2);
-//    objectsInScene.back()->setPosAbsolute(glm::vec3(6.0f, 0.0f, 0.0f));
-//    objectsInScene.push_back(pickup3);
-//    objectsInScene.back()->setPosAbsolute(glm::vec3(-3.0f, 0.0f, 3.0f));
-//    objectsInScene.push_back(pickup4);
-//	objectsInScene.back()->setPosAbsolute(glm::vec3(-6.0f, 0.0f, 0.0f));
-//    	objectsInScene.push_back(pickup1);
-//    objectsInScene.back()->setPosAbsolute(glm::vec3(0.0f, 0.0f, 0.0f));
-
-//    objectsInScene.push_back(pickup5);
-//    objectsInScene.back()->setPosAbsolute(glm::vec3(-20.0f, 0.0f, 0.0f));
+    objectsInScene.push_back(urso);
+    objectsInScene.push_back(pilha);
+    objectsInScene.push_back(pilha2);
+    objectsInScene.push_back(pilha3);
+    objectsInScene.push_back(pilha4);
+    objectsInScene.push_back(pilha5);
+    objectsInScene.push_back(pilha6);
 }
 
 void Window::destroy() const
@@ -182,10 +178,14 @@ void Window::destroy() const
 
 
 void
-Window::processInput(GLFWwindow *window) {
+Window::processInput(GLFWwindow *window) const {
     {
-        GLint lightSpotCutOffLoc = glGetUniformLocation( mainShader->ID, "light.cutOff" );
-        GLint lightSpotOuterCutOffLoc = glGetUniformLocation( mainShader->ID, "light.outerCutOff" );
+
+        if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        {
+            glfwSetWindowShouldClose(window,true);
+        }
+
         if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
             Syrian->lantern->setInnerLightRadius(23.5f);
             Syrian->lantern->setOuterLightRadius(30.5f);
@@ -200,9 +200,5 @@ Window::processInput(GLFWwindow *window) {
             Syrian->lantern->setInnerLightRadius(7.5f);
             Syrian->lantern->setOuterLightRadius(12.5f);
         }
-
-
-
-
     }
 }
