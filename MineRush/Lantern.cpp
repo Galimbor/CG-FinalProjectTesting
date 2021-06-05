@@ -14,7 +14,6 @@ void Lantern::Draw(Shader &shader) {
 void Lantern::makeProjectile(float launchSpeed) {
     trackedRotationMatrix = rotationMatrix;
     isFree = true;
-
     isProjectile = true;
     moveSpeed = launchSpeed;
     projectileStartTime = glfwGetTime();
@@ -67,15 +66,16 @@ void Lantern::setupColliders() {
 void Lantern::handleCollision(Model *otherModel) {
     CollisionResult result;
     for (int i = 0; i < colliders.size() && !result.isColliding; i++) {
-
         for (int j = 0; j < otherModel->colliders.size() && !result.isColliding; j++) {
             result = displacement->isColliding(otherModel->colliders[j]);
-            if (result.colType == CollisionTypes::Block) {
-
+//            std::cout << "dis max" << displacement->getBoxDimentions() << result.xCollision<< std::endl;
+//            std::cout << "dis start " << displacement->getBoxStart() << std::endl;
+//            std::cout << "other max" << otherModel->colliders[j]->getBoxStart() << std::endl;
+//            std::cout << "other start" << otherModel->colliders[j]->getBoxDimentions() << std::endl;
+            if (result.isColliding && result.colType == CollisionTypes::Block) {
                 xBlocked = result.xCollision;
                 yBlocked = result.yCollision;
                 zBlocked = result.zCollision;
-
             }
         }
     }
@@ -95,7 +95,7 @@ void Lantern::doProjectileMov() {
                                                               glfwGetTime() - projectileStartTime)[0];
             midAirPos = newPos;
         } else {
-            std::cout << "newPos" << newPos << std::endl;
+//            std::cout << "newPos" << newPos << std::endl;
             newPos.y = MovingBody::computeTranslationEquation(launchedPos.y, 0, -9.8f,
                                                               glfwGetTime() - projectileStartTime)[0];
             newPos.x = midAirPos.x;
@@ -116,6 +116,7 @@ void Lantern::doProjectileMov() {
 
 
 //            std::cout << "No block ever\n";
+//        std::cout << " new pos : " << newPos << std::endl;
         setPosAbsolute(newPos);
 //        }        else {
 //            std::cout << "pos blocked" << glm::vec3(launchedPos.x, newPos.y, launchedPos.z)<< std::endl;
@@ -145,7 +146,6 @@ void Lantern::doBounces() {
                                                           glfwGetTime() - bounceStartTime)[0];
         midAirPos = newPos;
     } else {
-        std::cout << "newPos" << newPos << std::endl;
         newPos.y = MovingBody::computeTranslationEquation(bouncePos.y, y_moveSpeed, -9.8f,
                                                           glfwGetTime() - bounceStartTime)[0];
         newPos.x = midAirPos.x;

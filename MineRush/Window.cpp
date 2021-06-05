@@ -37,13 +37,13 @@ void Window::doFrameLoop()
             GLint lightSpotCutOffLoc = glGetUniformLocation( mainShader->ID, "light.cutOff" );
             GLint lightSpotOuterCutOffLoc = glGetUniformLocation( mainShader->ID, "light.outerCutOff" );
             GLint viewPosLoc = glGetUniformLocation( mainShader->ID, "viewPos" );
-            glUniform3f( lightPosLoc, Syrian->lantern->getPos().x, Syrian->lantern->getPos().y, Syrian->lantern->getPos().z);
-            glUniform3f( lightSpotdirLoc, Syrian->lantern->getFrontVector().x,Syrian->lantern->getFrontVector().y,Syrian->lantern->getFrontVector().z);
-            glUniform1f( lightSpotCutOffLoc, glm::cos( glm::radians( 4.5f ) ) );
-            glUniform1f( lightSpotOuterCutOffLoc, glm::cos( glm::radians( 20.5f ) ) );
+            glUniform3f( lightPosLoc, Syrian->lantern->getPos().x, Syrian->lantern->getPos().y+2.2, Syrian->lantern->getPos().z);
+            glUniform3f( lightSpotdirLoc, Syrian->lantern->getFrontVector().x,Syrian->lantern->getFrontVector().y-1,Syrian->lantern->getFrontVector().z);
+            glUniform1f( lightSpotCutOffLoc, glm::cos( glm::radians( 9.5f ) ) );
+            glUniform1f( lightSpotOuterCutOffLoc, glm::cos( glm::radians( 15.5f ) ) );
             glUniform3f( viewPosLoc, 0,0,3);
             // Set lights properties
-            glUniform3f( glGetUniformLocation( mainShader->ID, "light.ambient" ),   0.8f, 0.8f, 0.8f );
+            glUniform3f( glGetUniformLocation( mainShader->ID, "light.ambient" ),   0.6f, 0.6f, 0.6f );
             // We set the diffuse intensity a bit higher; note that the right lighting conditions differ with each lighting method and environment.
             // Each environment and lighting type requires some tweaking of these variables to get the best out of your environment.
             glUniform3f( glGetUniformLocation( mainShader->ID, "light.diffuse" ), 0.8f, 0.8f, 0.8f );
@@ -69,8 +69,8 @@ void Window::doFrameLoop()
 
             Syrian->Draw(*playerShader,*mainShader);
             mainShader->Activate();
+            Syrian->handleLanternWallCollision(objectsInScene);
             Syrian->camera.setActiveCamera(*playerShader,*mainShader);
-
 
             for (auto & i : objectsInScene)
 			{
@@ -107,7 +107,7 @@ void Window::setupScene()
 	(
 		SyrianModelPath,
 		LanternModelPath,
-		30.0f,
+		10.0f,
 		glm::normalize(glm::vec3(-1, 1, 1))
 	);
 //	Syrian->scaleBy(glm::vec3(0.5f,0.5f,0.5f));
@@ -118,7 +118,6 @@ void Window::setupScene()
 	char Maze1ModelPath[] = "Models/maze1.obj";
 	char FloorModelPath[] = "Models/chao.obj";
     auto *maze1= new Maze(Maze1ModelPath);
-    std::cout << "so much coliders : " <<  maze1->colliders.size() << std::endl;
 //    char Maze2ModelPath[] = "Models/maze2.obj";
 //    auto *maze2= new Maze(MazeModelPath);
     auto *floor= new Maze(FloorModelPath);

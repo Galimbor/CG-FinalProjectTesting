@@ -31,7 +31,7 @@ void PlayerChar::setupCamera() {
 }
 
 glm::vec3 PlayerChar::getLanternAnchorPoint() {
-    return getPos();
+    return lantern->getMeshes().at(0).center + getPos();
 }
 
 glm::vec3 PlayerChar::getColliderPos() {
@@ -85,6 +85,8 @@ bool PlayerChar::intersectRaySegmentSphere(glm::vec3 o, glm::vec3 d, glm::vec3 s
 
 void PlayerChar::setupLantern() {
     if (holdingLantern) {
+//        std::cout << "lantern position" << lantern->getPos() << std::endl;
+//        std::cout << "char position" << getPos() << std::endl;
         lantern->setPosAbsolute(lanternAnchorPoint);
     }
 }
@@ -117,6 +119,16 @@ void PlayerChar::Draw(Shader &shader, Shader &mainShader) {
     Model::Draw(shader);
 }
 
+void PlayerChar::handleLanternWallCollision(std::vector<Model *> objectsInScene) const {
+    {
+        std::vector<Model *> newObjectsInScene = std::vector<Model *>(objectsInScene.size(), nullptr);
+        for (auto &i : objectsInScene) {
+            lantern->handleCollision(i);
+//            std::cout << lantern->getPos() << std::endl;
+        }
+    }
+}
+
 void PlayerChar::setPosAbsolute(glm::vec3 newPos) {
     Model::setPosAbsolute(newPos);
     this->collider.origin = getColliderPos();
@@ -124,22 +136,8 @@ void PlayerChar::setPosAbsolute(glm::vec3 newPos) {
 }
 
 void PlayerChar::translateBy(glm::vec3 vector) {
-//        if(zBlocked) {
-//            std::cout << "1st\n";
-//            Model::translateBy(glm::vec3(vector.x, vector.y, 0));
-//        }
-//        else if(xBlocked) {
-//            std::cout << "2nd\n"
-//            Model::translateBy(glm::vec3(0, vector.y, vector.z));
-//        }
-//        else if(xBlocked && zBlocked) {
-//            std::cout << "3rd\n";
-//            Model::translateBy(glm::vec3(0, vector.y, 0));
-//        }
-//        else
-//        {
+
     Model::translateBy(vector);
-//        }
 
 //    std::cout << displacement->getMax() << std::endl;
 //    std::cout << displacement->getMin() << std::endl;
@@ -179,32 +177,36 @@ PlayerChar::processInput(GLFWwindow *window, float width, float height, float de
             xBlocked = false;
             yBlocked = false;
             zBlocked = false;
-//            rotateBySpeed(cos(glfwGetTime() * 10)/2,glm::vec3(0,1,0),deltaTime);
+            rotateBySpeed(cos(glfwGetTime() * 10)/4,glm::vec3(0,1,0),deltaTime);
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
             glm::vec3 back = -getFrontVector();
             displacement->setPosAbsolute(getPos());
             calcDisplacement(glm::vec3(cameraLookAtVector.x, 0, cameraLookAtVector.z), deltaTime);
-            collisions(std::move(objectsInScene));
+            collisions(objectsInScene);
             translateBySpeed(glm::vec3(cameraLookAtVector.x, 0, cameraLookAtVector.z), deltaTime);
             xBlocked = false;
             yBlocked = false;
             zBlocked = false;
-//            rotateBySpeed(cos(glfwGetTime() * 10)/2,glm::vec3(0,1,0),deltaTime);
+            rotateBySpeed(cos(glfwGetTime() * 10)/4,glm::vec3(0,1,0),deltaTime);
 
         }
 
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+//        1 grande fofa azeitonas salame bacon 8 paes de alho c chourico
+//        salame azeitonas media c 1 cola
+//        1 grande fina vegetariana c paes alo
+
+if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             glm::vec3 right = getRightVector();
             displacement->setPosAbsolute(getPos());
 
             calcDisplacement(glm::vec3(-cameraLookAtVector.x, 0, cameraLookAtVector.z), deltaTime);
-            collisions(std::move(objectsInScene));
+            collisions(objectsInScene);
             translateBySpeed(glm::vec3(-cameraLookAtVector.x, 0, cameraLookAtVector.z), deltaTime);
             xBlocked = false;
             yBlocked = false;
             zBlocked = false;
-//            rotateBySpeed(cos(glfwGetTime() * 10)/2,glm::vec3(0,1,0),deltaTime);
+            rotateBySpeed(cos(glfwGetTime() * 10)/4,glm::vec3(0,1,0),deltaTime);
 
 
         }
@@ -213,16 +215,19 @@ PlayerChar::processInput(GLFWwindow *window, float width, float height, float de
             glm::vec3 left = -getRightVector();
             displacement->setPosAbsolute(getPos());
             calcDisplacement(glm::vec3(cameraLookAtVector.x, 0, -cameraLookAtVector.z), deltaTime);
-            collisions(std::move(objectsInScene));
+            collisions(objectsInScene);
             translateBySpeed(glm::vec3(cameraLookAtVector.x, 0, -cameraLookAtVector.z), deltaTime);
             xBlocked = false;
             yBlocked = false;
             zBlocked = false;
-//            rotateBySpeed(cos(glfwGetTime() * 10)/2,glm::vec3(0,1,0),deltaTime);
+            rotateBySpeed(cos(glfwGetTime() * 10)/4,glm::vec3(0,1,0),deltaTime);
 
         }
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-            throwLantern(20.0f);
+            lantern->xBlocked = false;
+            lantern->yBlocked = false;
+            lantern->zBlocked = false;
+            throwLantern(10.0f);
         }
 
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
@@ -383,7 +388,6 @@ void PlayerChar::collisions(std::vector<Model *> objectsInScene)
 		{
 			newObjectsInScene[count++] = i;
 		}
-		lantern->handleCollision(i);
 	}
 
 	handleLanternCollision();

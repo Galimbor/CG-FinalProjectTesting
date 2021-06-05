@@ -19,8 +19,7 @@ private:
     glm::vec3 rightVector = glm::vec3(0.0f, 0.0f, 1.0f);
 protected:
 
-    float moveSpeed = 10.0f;
-
+    float moveSpeed = 3.0f;
     float rotSpeed = 10.0f;
     float weight = 10.0f;
 

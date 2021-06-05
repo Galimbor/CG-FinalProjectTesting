@@ -34,9 +34,9 @@ void MovingBody::setPosAbsolute(glm::vec3 newPos)
 	{
         collider->setPosAbsolute(getPos());
     }
-//    if(displacement != nullptr) {
-//        displacement->setPosAbsolute(getPos());
-//    }
+    if(displacement != nullptr) {
+        displacement->setPosAbsolute(getPos());
+    }
 }
 
 void MovingBody::translateBy(glm::vec3 vector)
@@ -46,9 +46,9 @@ void MovingBody::translateBy(glm::vec3 vector)
 	{
         collider->setPosAbsolute(getPos());
     }
-//    if(displacement != nullptr) {
-//        displacement->setPosAbsolute(getPos());
-//    }
+    if(displacement != nullptr) {
+        displacement->setPosAbsolute(getPos());
+    }
     positionMatrix = glm::translate(positionMatrix, vector);
 }
 
@@ -95,11 +95,6 @@ void MovingBody::rotateBy(float angle, glm::vec3 rotationAxis)
         direction = glm::normalize(direction);
         glm::vec3 translation = direction * moveSpeed * deltaTime;
         displacement->setPosAbsolute(getPos()+ translation);
-
-        std::cout << "dis start " << displacement->getBoxStart() << std::endl;
-        std::cout << "dis max " << displacement->getBoxDimentions() << std::endl;
-        std::cout << "col start " << colliders.at(0)->getBoxStart() << std::endl;
-        std::cout << "col max " << colliders.at(0)->getBoxDimentions()<< std::endl;
 }
 
 void MovingBody::translateBySpeed(glm::vec3 direction, float deltaTime)

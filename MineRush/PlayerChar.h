@@ -31,7 +31,7 @@ private:
 
 	glm::vec3 cameraLookAtVector;
     bool isJumping = false;
-    float jumpSpeed = 10.0f;
+    float jumpSpeed = 4.0f;
 
 	float jumpStartTime = 0.0f;
 
@@ -88,7 +88,7 @@ public:
 
 	bool handleCollision(Model* otherModel);
 
-    void handleWallCollision();
+    void handleLanternWallCollision(std::vector<Model *> objectsInScene) const;
 
     void handleLanternCollision();
 
