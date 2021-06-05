@@ -31,7 +31,8 @@ void PlayerChar::setupCamera() {
 }
 
 glm::vec3 PlayerChar::getLanternAnchorPoint() {
-    return lantern->getMeshes().at(0).center + getPos();
+    //return lantern->getMeshes().at(0).center + getPos();
+    return getPos();
 }
 
 glm::vec3 PlayerChar::getColliderPos() {
