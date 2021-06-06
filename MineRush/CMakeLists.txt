@@ -3,22 +3,22 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Shaders DESTINATION ${CMAKE_CURRENT_BINARY
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB source_files
-     "*.h"
-     "*.cpp"
-)
+        "*.h"
+        "*.cpp"
+        )
 add_executable(
-		MineRush
-		${source_files}
+        MineRush
+        ${source_files}
 )
 
 
 target_link_libraries(
-	MineRush
+        MineRush
         LINK_PUBLIC
         glfw
         glad
-	stb_image
-	assimp
+        stb_image
+        assimp
         ${CMAKE_DL_LIBS}
-        )
+)
 

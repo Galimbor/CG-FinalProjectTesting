@@ -11,15 +11,15 @@
 #include "Mesh.h"
 #include "MovingBody.h"
 
-class Model : public MovingBody
-{
+class Model : public MovingBody {
 public:
-    Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
-    {
+    Model(std::string const &path, bool gamma = false) : gammaCorrection(gamma) {
         loadModel(path);
     }
-    virtual void Draw(Shader& shader) override;
-    virtual void Draw(Shader& shader, float deltaTime) override;
+
+    virtual void Draw(Shader &shader) override;
+
+    virtual void Draw(Shader &shader, float deltaTime) override;
 
     virtual void setPosAbsolute(glm::vec3 newPos) override;
 
@@ -42,12 +42,15 @@ private:
     std::vector<Texture> textures_loaded;
     bool gammaCorrection;
 
-    void loadModel(std::string const& path);
-    void processNode(aiNode* node, const aiScene* scene);
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type,
+    void loadModel(std::string const &path);
+
+    void processNode(aiNode *node, const aiScene *scene);
+
+    Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+
+    std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
                                               std::string typeName);
 
-    Material loadMaterial(aiMaterial* mat);
+    Material loadMaterial(aiMaterial *mat);
 };
 

@@ -7,28 +7,27 @@
 #include "Mesh.h"
 #include <glm/gtx/io.hpp>
 
-Collider::Collider (Mesh& mesh,CollisionTypes::Type type) {
+Collider::Collider(Mesh &mesh, CollisionTypes::Type type) {
     this->colType = type;
     this->max = glm::vec3(-INFINITY, -INFINITY, -INFINITY);
     this->min = glm::vec3(INFINITY, INFINITY, INFINITY);
 
     // std::cout << size << std::endl;
-    for(const auto & vertice : mesh.vertices){
-        if(vertice.Position.x > max.x)
+    for (const auto &vertice : mesh.vertices) {
+        if (vertice.Position.x > max.x)
             max.x = vertice.Position.x;
-        if(vertice.Position.y > max.y)
+        if (vertice.Position.y > max.y)
             max.y = vertice.Position.y;
-        if(vertice.Position.z > max.z)
+        if (vertice.Position.z > max.z)
             max.z = vertice.Position.z;
-        if(vertice.Position.x < min.x)
+        if (vertice.Position.x < min.x)
             min.x = vertice.Position.x;
-        if(vertice.Position.y < min.y)
+        if (vertice.Position.y < min.y)
             min.y = vertice.Position.y;
-        if(vertice.Position.z < min.z)
+        if (vertice.Position.z < min.z)
             min.z = vertice.Position.z;
 
-        if (debugDrawBox)
-        {
+        if (debugDrawBox) {
             makeDrawableBox();
 //            debugShader = new Shader("Shaders/debugCollisions.vert", "Shaders/debugCollisions.frag");
             setupDebug();
@@ -37,13 +36,12 @@ Collider::Collider (Mesh& mesh,CollisionTypes::Type type) {
     }
 
 }
-Collider::Collider(CollisionTypes::Type type, glm::vec3 boxOffset, glm::vec3 boxDimentions)
-{
-	this->colType = type;
-	this->boxOffset = boxOffset;
-	this->boxDimentions = boxDimentions;
-    if (debugDrawBox)
-    {
+
+Collider::Collider(CollisionTypes::Type type, glm::vec3 boxOffset, glm::vec3 boxDimentions) {
+    this->colType = type;
+    this->boxOffset = boxOffset;
+    this->boxDimentions = boxDimentions;
+    if (debugDrawBox) {
         makeDrawableBox(vertices, indices);
         //debugShader = new Shader("Shaders/debugCollisions.vert", "Shaders/debugCollisions.frag");
         setupDebug();
@@ -76,26 +74,25 @@ Collider::Collider(CollisionTypes::Type type, glm::vec3 boxOffset, glm::vec3 box
 //    return result;
 //}
 
-CollisionResult Collider::isColliding(Collider* otherCollider)
-{
-	CollisionResult result;
-	glm::vec3 thisBoxStart = getBoxStart();
-	glm::vec3 otherBoxStart = otherCollider->getBoxStart();
+CollisionResult Collider::isColliding(Collider *otherCollider) {
+    CollisionResult result;
+    glm::vec3 thisBoxStart = getBoxStart();
+    glm::vec3 otherBoxStart = otherCollider->getBoxStart();
 
-	float xThisDimention = thisBoxStart.x + this->boxDimentions.x;
-	float xOtherDimention = otherBoxStart.x + otherCollider->boxDimentions.x;
-	result.xCollision = xThisDimention >= otherBoxStart.x
-		&& xOtherDimention >= thisBoxStart.x;
+    float xThisDimention = thisBoxStart.x + this->boxDimentions.x;
+    float xOtherDimention = otherBoxStart.x + otherCollider->boxDimentions.x;
+    result.xCollision = xThisDimention >= otherBoxStart.x
+                        && xOtherDimention >= thisBoxStart.x;
 
-	result.yCollision = thisBoxStart.y + this->boxDimentions.y >= otherBoxStart.y
-		&& otherBoxStart.y + otherCollider->boxDimentions.y >= thisBoxStart.y;
+    result.yCollision = thisBoxStart.y + this->boxDimentions.y >= otherBoxStart.y
+                        && otherBoxStart.y + otherCollider->boxDimentions.y >= thisBoxStart.y;
 
-	result.zCollision = thisBoxStart.z + this->boxDimentions.z >= otherBoxStart.z
-		&& otherBoxStart.z + otherCollider->boxDimentions.z >= thisBoxStart.z;
+    result.zCollision = thisBoxStart.z + this->boxDimentions.z >= otherBoxStart.z
+                        && otherBoxStart.z + otherCollider->boxDimentions.z >= thisBoxStart.z;
 
-	result.isColliding = result.xCollision && result.yCollision && result.zCollision;
-	result.colType = otherCollider->colType;
-	return result;
+    result.isColliding = result.xCollision && result.yCollision && result.zCollision;
+    result.colType = otherCollider->colType;
+    return result;
 }
 
 //std::vector<Collider> Collider::getAllCollisions(std::vector<Collider> allColliders){
@@ -107,20 +104,16 @@ CollisionResult Collider::isColliding(Collider* otherCollider)
 //    return resultCollisions;
 //}
 
-void Collider::setPosAbsolute(glm::vec3 newPos)
-{
-	parentPosition = newPos;
+void Collider::setPosAbsolute(glm::vec3 newPos) {
+    parentPosition = newPos;
 }
 
-glm::vec3 Collider::getBoxStart()
-{
-	return min + parentPosition;
+glm::vec3 Collider::getBoxStart() {
+    return min + parentPosition;
 }
 
-void Collider::DrawDebug(Shader& shader)
-{
-    if (debugDrawBox)
-    {
+void Collider::DrawDebug(Shader &shader) {
+    if (debugDrawBox) {
         glm::mat4 ModelMatrix = glm::translate(glm::mat4(1.0f), parentPosition);
         shader.setMat4("model", ModelMatrix);
         vao->Bind();
@@ -200,14 +193,13 @@ void Collider::makeDrawableBox() {
 }
 
 
-void Collider::makeDrawableBox(std::vector<glm::vec3>& vertices, std::vector<unsigned int>& indices)
-{
+void Collider::makeDrawableBox(std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices) {
     vertices = std::vector<glm::vec3>(8);
     indices = std::vector<unsigned int>(36);
 
     vertices[0] = getBoxStart();
     vertices[1] = getBoxStart() - glm::vec3(getBoxDimentions().x, 0.0f, 0.0f);
-    vertices[2] = getBoxStart() - glm::vec3(getBoxDimentions().x, 0.0f,getBoxDimentions().z);
+    vertices[2] = getBoxStart() - glm::vec3(getBoxDimentions().x, 0.0f, getBoxDimentions().z);
     vertices[3] = getBoxStart() - glm::vec3(0.0f, 0.0f, getBoxDimentions().z);
     vertices[4] = getBoxStart() - glm::vec3(0.0f, getBoxDimentions().y, 0.0f);
     vertices[5] = getBoxStart() - glm::vec3(getBoxDimentions().x, getBoxDimentions().y, 0.0f);
@@ -273,8 +265,7 @@ void Collider::makeDrawableBox(std::vector<glm::vec3>& vertices, std::vector<uns
 
 }
 
-void Collider::setupDebug()
-{
+void Collider::setupDebug() {
 //    debugShader->Activate();
     vao = new VAO();
     vao->Bind();
@@ -284,7 +275,7 @@ void Collider::setupDebug()
     ebo = new EBO(&indices[0], indices.size() * sizeof(unsigned int));
 
     //pos vertexes
-    vao->LinkAttrib(*vbo, 0, 3, GL_FLOAT, sizeof(glm::vec3), (void*)0);
+    vao->LinkAttrib(*vbo, 0, 3, GL_FLOAT, sizeof(glm::vec3), (void *) 0);
 
     vao->Unbind();
     vbo->Unbind();
@@ -309,7 +300,7 @@ void Collider::setMax(glm::vec3 newMax) {
 }
 
 
-Collider::Collider(Collider& collider) {
+Collider::Collider(Collider &collider) {
     this->max = collider.getMax();
     this->min = collider.getMin();
     this->colType = collider.colType;

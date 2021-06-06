@@ -40,7 +40,7 @@ public:
     // mesh data
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture>      textures;
+    std::vector<Texture> textures;
     Material mat;
 
     glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -49,12 +49,16 @@ public:
 
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material mat_);
-    virtual void Draw(Shader& shader) override;
+
+    virtual void Draw(Shader &shader) override;
+
 private:
     //  render data
-    class VAO* vao = nullptr;
-    class VBO* vbo = nullptr;
-    class EBO* ebo = nullptr;
+    class VAO *vao = nullptr;
+
+    class VBO *vbo = nullptr;
+
+    class EBO *ebo = nullptr;
 
     void setupMesh();
 };

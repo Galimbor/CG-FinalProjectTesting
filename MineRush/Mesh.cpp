@@ -1,8 +1,8 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material mat_)
-        : MovingBody()
-{
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures,
+           Material mat_)
+        : MovingBody() {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
@@ -11,15 +11,13 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     setupMesh();
 
 
-    for (int i = 0; i < vertices.size(); i++)
-    {
+    for (int i = 0; i < vertices.size(); i++) {
         center += vertices[i].Position;
     }
     center /= vertices.size();
 }
 
-void Mesh::setupMesh()
-{
+void Mesh::setupMesh() {
     vao = new VAO();
     vao->Bind();
 
@@ -28,11 +26,11 @@ void Mesh::setupMesh()
     ebo = new EBO(&indices[0], indices.size() * sizeof(unsigned int));
 
     //pos vertexes
-    vao->LinkAttrib(*vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
-    vao->LinkAttrib(*vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
-    vao->LinkAttrib(*vbo, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-    vao->LinkAttrib(*vbo, 3, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
-    vao->LinkAttrib(*vbo, 4, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+    vao->LinkAttrib(*vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void *) 0);
+    vao->LinkAttrib(*vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void *) offsetof(Vertex, Normal));
+    vao->LinkAttrib(*vbo, 2, 2, GL_FLOAT, sizeof(Vertex), (void *) offsetof(Vertex, TexCoords));
+    vao->LinkAttrib(*vbo, 3, 3, GL_FLOAT, sizeof(Vertex), (void *) offsetof(Vertex, Tangent));
+    vao->LinkAttrib(*vbo, 4, 3, GL_FLOAT, sizeof(Vertex), (void *) offsetof(Vertex, Bitangent));
 
     vao->Unbind();
     vbo->Unbind();
@@ -40,16 +38,14 @@ void Mesh::setupMesh()
 }
 
 
-void Mesh::Draw(Shader& shader)
-{
+void Mesh::Draw(Shader &shader) {
     MovingBody::Draw(shader);
 
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr = 1;
     unsigned int heightNr = 1;
-    for (unsigned int i = 0; i < textures.size(); i++)
-    {
+    for (unsigned int i = 0; i < textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
         // retrieve texture number (the N in diffuse_textureN)
         std::string number;

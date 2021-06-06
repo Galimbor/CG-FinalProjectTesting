@@ -32,7 +32,7 @@ void PlayerChar::setupCamera() {
 
 glm::vec3 PlayerChar::getLanternAnchorPoint() {
     //return lantern->getMeshes().at(0).center + getPos();
-    return getRightVector()/3.0f + glm::vec3(0, 0.8, 0) + getFrontVector()/2.5f+  getPos();
+    return getRightVector() / 3.0f + glm::vec3(0, 0.8, 0) + getFrontVector() / 2.5f + getPos();
 }
 
 glm::vec3 PlayerChar::getColliderPos() {
@@ -86,8 +86,7 @@ bool PlayerChar::intersectRaySegmentSphere(glm::vec3 o, glm::vec3 d, glm::vec3 s
 
 void PlayerChar::setupLantern() {
     if (holdingLantern) {
-//        std::cout << "lantern position" << lantern->getPos() << std::endl;
-//        std::cout << "char position" << getPos() << std::endl;
+
         lantern->setPosAbsolute(lanternAnchorPoint);
     }
 }
@@ -97,8 +96,6 @@ PlayerChar::PlayerChar(std::string const &playerCharPath, std::string const &lan
         : Model(playerCharPath) {
 
     lantern = new Lantern(lanternPath);
-//    lantern->scaleBy(glm::vec3(0.3,0.3,0.3));
-//	lantern->rotateBy(90, glm::vec3(1,0,0));
     this->cameraDist = cameraDist;
     this->cameraLookAtVector = cameraLookAtVector;
 
@@ -166,7 +163,8 @@ void PlayerChar::rotateBy(float angle, glm::vec3 rotationAxis) {
 }
 
 void
-PlayerChar::processInput(GLFWwindow *window, float width, float height, float deltaTime, std::vector<Model *> &objectsInScene) {
+PlayerChar::processInput(GLFWwindow *window, float width, float height, float deltaTime,
+                         std::vector<Model *> &objectsInScene) {
     {
         if (!isDead) {
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -224,6 +222,15 @@ PlayerChar::processInput(GLFWwindow *window, float width, float height, float de
                 throwLantern(10.0f);
             }
 
+            if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+                if(getIsLanternOn())
+                    setIsLanternOn(false);
+                else
+                {
+                    setIsLanternOn(true);
+                }
+            }
+
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
                 if (!isJumping)
                     jump();
@@ -252,32 +259,32 @@ void PlayerChar::updateLookAt(GLFWwindow *window, float width, float height, flo
 
     glm::vec3 lookAtPoint = glm::vec3(x, 0.0f, z);
 //    if (!isJumping) {
-        lookAtPoint = lookAtPoint - getPos();
-        if (glm::length(lookAtPoint) != 0) {
-            lookAtPoint = glm::normalize(lookAtPoint);
-        } else {
-            lookAtPoint = glm::vec3(1.0f, 0.0f, 0.0);
-        }
+    lookAtPoint = lookAtPoint - getPos();
+    if (glm::length(lookAtPoint) != 0) {
+        lookAtPoint = glm::normalize(lookAtPoint);
+    } else {
+        lookAtPoint = glm::vec3(1.0f, 0.0f, 0.0);
+    }
 
 
-        float dotProduct = glm::dot(lookAtPoint, getFrontVector());
-        glm::vec3 crossProduct = glm::cross(lookAtPoint, getFrontVector());
-        float lP_Magnitude = glm::length(lookAtPoint);
-        float fV_Magnitude = glm::length(getFrontVector());
-        float acosArg = dotProduct / (lP_Magnitude * fV_Magnitude);
-        acosArg = glm::clamp(acosArg, 0.0f, 1.0f);
-        float angle = glm::acos(acosArg);
+    float dotProduct = glm::dot(lookAtPoint, getFrontVector());
+    glm::vec3 crossProduct = glm::cross(lookAtPoint, getFrontVector());
+    float lP_Magnitude = glm::length(lookAtPoint);
+    float fV_Magnitude = glm::length(getFrontVector());
+    float acosArg = dotProduct / (lP_Magnitude * fV_Magnitude);
+    acosArg = glm::clamp(acosArg, 0.0f, 1.0f);
+    float angle = glm::acos(acosArg);
 
 
-        //std::cout << "lookAtPoint: " << lookAtPoint.x << " " << lookAtPoint.y << " " << lookAtPoint.z << "\n";
-        //std::cout << "origin: " << origin.x << " " << origin.y << " " << origin.z << "\n";
-        //std::cout << "direction: " << direction.x << " " << direction.y << " " << direction.z << "\n";
-        //std::cout << "angle: " << angle << "\n";
-        if (crossProduct.y < 0)
-            rotateBySpeed(angle, glm::vec3(0.0f, 1.0f, 0.0f), deltaTime);
-        else {
-            rotateBySpeed(-angle, glm::vec3(0.0f, 1.0f, 0.0f), deltaTime);
-        }
+    //std::cout << "lookAtPoint: " << lookAtPoint.x << " " << lookAtPoint.y << " " << lookAtPoint.z << "\n";
+    //std::cout << "origin: " << origin.x << " " << origin.y << " " << origin.z << "\n";
+    //std::cout << "direction: " << direction.x << " " << direction.y << " " << direction.z << "\n";
+    //std::cout << "angle: " << angle << "\n";
+    if (crossProduct.y < 0)
+        rotateBySpeed(angle, glm::vec3(0.0f, 1.0f, 0.0f), deltaTime);
+    else {
+        rotateBySpeed(-angle, glm::vec3(0.0f, 1.0f, 0.0f), deltaTime);
+    }
 //    }
 
     this->lanternAnchorPoint = getLanternAnchorPoint();
@@ -374,20 +381,31 @@ void PlayerChar::handleLanternCollision() {
     }
 }
 
-void PlayerChar::collisions(std::vector<Model *> &objectsInScene)
-{
-	std::vector<Model*> newObjectsInScene = std::vector<Model*>(objectsInScene.size(), nullptr);
-	int count = 0;
-	for (auto & i : objectsInScene)
-	{
-		if (!handleCollision(i))
-		{
-			newObjectsInScene[count++] = i;
-		}
-	}
-
-	handleLanternCollision();
-
-
-	objectsInScene = std::vector<Model*>(newObjectsInScene.begin(), newObjectsInScene.begin() + count);
+void PlayerChar::collisions(std::vector<Model *> &objectsInScene) {
+    std::vector<Model *> newObjectsInScene = std::vector<Model *>(objectsInScene.size(), nullptr);
+    int count = 0;
+    for (auto &i : objectsInScene) {
+        if (!handleCollision(i)) {
+            newObjectsInScene[count++] = i;
+        }
+    }
+    handleLanternCollision();
+    objectsInScene = std::vector<Model *>(newObjectsInScene.begin(), newObjectsInScene.begin() + count);
 }
+
+void PlayerChar::setBatteryDecayRate(float rate) {
+    this->batteryDecayRate = rate;
+}
+
+float PlayerChar::getBatteryDecayRate() {
+    return this->batteryDecayRate;
+}
+
+bool PlayerChar::getIsLanternOn(){
+    return this->isLanternOn;
+}
+
+void PlayerChar::setIsLanternOn(bool power){
+    this->isLanternOn = power;
+}
+

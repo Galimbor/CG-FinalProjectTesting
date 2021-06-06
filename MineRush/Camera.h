@@ -10,45 +10,43 @@
 
 #include "Shader.h"
 
-namespace ProjectionType
-{
-	enum Types {
-		Ortho,
-		Perspective
-	};
+namespace ProjectionType {
+    enum Types {
+        Ortho,
+        Perspective
+    };
 };
 
-class Camera
-{
+class Camera {
 private:
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 0.001f, 100.0f);
-	ProjectionType::Types projType;
+    glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 0.001f, 100.0f);
+    ProjectionType::Types projType;
 
-	float orthoWidth;
-	float orthoHeight;
+    float orthoWidth;
+    float orthoHeight;
 
-public: 
-	void setActiveCamera(Shader& shader, Shader& mainShader);
+public:
+    void setActiveCamera(Shader &shader, Shader &mainShader);
 
-	void setPosAbsolute(glm::vec3 newPos);
+    void setPosAbsolute(glm::vec3 newPos);
 
-	void translateBy(glm::vec3 vector);
+    void translateBy(glm::vec3 vector);
 
-	void setTargetAbsolute(glm::vec3 newTarget);
+    void setTargetAbsolute(glm::vec3 newTarget);
 
-	void setCameraUp(glm::vec3 newCameraUp);
+    void setCameraUp(glm::vec3 newCameraUp);
 
-	void setProjectionAsOrtho(float left, float right, float bottom, float top, float minRange, float maxRange);
+    void setProjectionAsOrtho(float left, float right, float bottom, float top, float minRange, float maxRange);
 
-	void setProjectionAsPerspective(float FOV, float aspectRatio, float minRange, float maxRange);
+    void setProjectionAsPerspective(float FOV, float aspectRatio, float minRange, float maxRange);
 
-	//result[0] == cast direction, result[1] == cast origin
-	std::vector<glm::vec3> getMouseCast(GLFWwindow* window, float width, float height);
+    //result[0] == cast direction, result[1] == cast origin
+    std::vector<glm::vec3> getMouseCast(GLFWwindow *window, float width, float height);
 
-	glm::mat4 getCurrentViewMatrix();
+    glm::mat4 getCurrentViewMatrix();
 };
 
