@@ -26,6 +26,7 @@ public:
 
     float getDeltaTime() const;
 
+
     void getWindowDimentions(float &width, float &height);
 
 private:
@@ -41,6 +42,6 @@ private:
 
 //	void collisions();
 
-    void processInput(GLFWwindow *window) const;
+    void processInput(GLFWwindow *window);
 };
 

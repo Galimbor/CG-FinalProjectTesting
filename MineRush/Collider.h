@@ -69,8 +69,6 @@ public:
 
     CollisionResult isColliding(Collider *otherCollider);
 
-    std::vector<Collider> getAllCollisions(std::vector<Collider> allHitBoxes);
-
     void setPosAbsolute(glm::vec3 newPos);
 
     glm::vec3 getMax();

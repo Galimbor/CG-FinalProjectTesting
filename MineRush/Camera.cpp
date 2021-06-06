@@ -63,10 +63,6 @@ std::vector<glm::vec3> Camera::getMouseCast(GLFWwindow *window, float width, flo
         cursor_x = glm::clamp(cursor_x, -orthoWidth / 2, orthoWidth / 2);
         cursor_y = glm::clamp(cursor_y, -orthoHeight / 2, orthoHeight / 2);
 
-        //std::cout << "mouse coords" << cursor_x << " " << cursor_y << "\n";
-        //cursor_x = (2.0f * cursor_x / width - 1) * (orthoWidth / 2);
-        //cursor_y = -(2.0f * cursor_y / height - 1) * (orthoHeight / 2);
-
 
         glm::vec3 camDirection = glm::normalize(cameraTarget - cameraPos);
         glm::vec3 cameraRight = glm::normalize(glm::cross(camDirection, cameraUp));

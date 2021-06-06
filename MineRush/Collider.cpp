@@ -29,7 +29,6 @@ Collider::Collider(Mesh &mesh, CollisionTypes::Type type) {
 
         if (debugDrawBox) {
             makeDrawableBox();
-//            debugShader = new Shader("Shaders/debugCollisions.vert", "Shaders/debugCollisions.frag");
             setupDebug();
         }
         setBoxDimentions();
@@ -43,36 +42,11 @@ Collider::Collider(CollisionTypes::Type type, glm::vec3 boxOffset, glm::vec3 box
     this->boxDimentions = boxDimentions;
     if (debugDrawBox) {
         makeDrawableBox(vertices, indices);
-        //debugShader = new Shader("Shaders/debugCollisions.vert", "Shaders/debugCollisions.frag");
         setupDebug();
     }
 
 }
 
-//CollisionResult Collider::isColliding(Collider* otherCollider)
-//{
-//    CollisionResult result;
-//    glm::vec3 thisBoxStart = min;
-//    glm::vec3 otherBoxStart = otherCollider->min;
-//
-//    float xThisDimention = thisBoxStart.x + this->max.x;
-//    float xOtherDimention = otherBoxStart.x + otherCollider->max.x;
-//    bool xCollision = xThisDimention >= otherBoxStart.x
-//                      && xOtherDimention >= thisBoxStart.x;
-//
-//    bool yCollision = thisBoxStart.y + this->max.y >= otherBoxStart.y
-//                      && otherBoxStart.y + otherCollider->max.y >= thisBoxStart.y;
-//
-//    bool zCollision = thisBoxStart.z + this->max.z >= otherBoxStart.z
-//                      && otherBoxStart.z + otherCollider->max.z >= thisBoxStart.z;
-//
-//    std::cout <<"x: " <<  xCollision << std::endl;
-//    std::cout <<"y: " << yCollision << std::endl;
-//    std::cout <<"z: " << zCollision << std::endl;
-//    result.isColliding = xCollision && yCollision && zCollision;
-//    result.colType = this->colType;
-//    return result;
-//}
 
 CollisionResult Collider::isColliding(Collider *otherCollider) {
     CollisionResult result;
@@ -95,14 +69,6 @@ CollisionResult Collider::isColliding(Collider *otherCollider) {
     return result;
 }
 
-//std::vector<Collider> Collider::getAllCollisions(std::vector<Collider> allColliders){
-//    std::vector<Collider> resultCollisions = std::vector<Collider>();
-//    for (auto & allCollider : allColliders) {
-//        if(isColliding(&allCollider).isColliding)
-//            resultCollisions.push_back(allCollider);
-//    }
-//    return resultCollisions;
-//}
 
 void Collider::setPosAbsolute(glm::vec3 newPos) {
     parentPosition = newPos;

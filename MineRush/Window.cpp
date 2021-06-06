@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "Maze.h"
 
+
 Window::Window() {
     glfwInit();
 
@@ -21,6 +22,7 @@ Window::Window() {
     glViewport(0, 0, width, height);
 
     setupScene();
+
 }
 
 void Window::doFrameLoop() {
@@ -45,19 +47,15 @@ void Window::doFrameLoop() {
 
             // We set the diffuse intensity a bit higher; note that the right lighting conditions differ with each lighting method and environment.
             // Each environment and lighting type requires some tweaking of these variables to get the best out of your environment.
-            glUniform3f(glGetUniformLocation(mainShader->ID, "light.diffuse"), 0.9f,0.9f, 0.9f);
+            glUniform3f(glGetUniformLocation(mainShader->ID, "light.diffuse"), 0.9f, 0.9f, 0.9f);
             glUniform3f(glGetUniformLocation(mainShader->ID, "light.specular"), 1.0f, 1.0f, 1.0f);
             glUniform1f(glGetUniformLocation(mainShader->ID, "light.constant"), 1.0f);
             glUniform1f(glGetUniformLocation(mainShader->ID, "light.linear"), 0.09f);
             glUniform1f(glGetUniformLocation(mainShader->ID, "light.quadratic"), 0.032f);
             glUniform1f(glGetUniformLocation(mainShader->ID, "material.shininess"), 32.0f);
-            if(Syrian->getIsLanternOn())
-                glUniform1f(glGetUniformLocation(mainShader->ID, "flashlightIntensity"),
-                        Syrian->getBatteryPercent() * Syrian->getBatteryDecayRate() / 5);
-            else
-            {
-                glUniform1f(glGetUniformLocation(mainShader->ID, "flashlightIntensity"),0);
-            }
+            glUniform1f(glGetUniformLocation(mainShader->ID, "flashlightIntensity"),
+                            Syrian->getBatteryPercent() * Syrian->getBatteryDecayRate() / 5);
+
 
 
             glEnable(GL_DEPTH_TEST);
@@ -74,7 +72,7 @@ void Window::doFrameLoop() {
 
             Syrian->Draw(*playerShader, *mainShader);
             mainShader->Activate();
-            std::cout << Syrian->getBatteryPercent() << std::endl;
+//            std::cout << Syrian->getBatteryPercent() << std::endl;
             Syrian->handleLanternWallCollision(objectsInScene);
             Syrian->camera.setActiveCamera(*playerShader, *mainShader);
 
@@ -114,7 +112,6 @@ void Window::setupScene() {
                     glm::normalize(glm::vec3(-1, 1, 1))
             );
 
-//	Syrian->scaleBy(glm::vec3(0.5f,0.5f,0.5f));
 
     //put other objects in scene
 
@@ -159,11 +156,15 @@ void Window::destroy() const {
 
 
 void
-Window::processInput(GLFWwindow *window) const {
+Window::processInput(GLFWwindow *window)  {
     {
 
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
+            Window::setupScene();
         }
 
         if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {

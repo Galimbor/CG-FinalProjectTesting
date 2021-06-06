@@ -1,16 +1,15 @@
 #include "PlayerChar.h"
 #include <glm/gtx/io.hpp>
-#include <utility>
 #include <vector>
 
+
 void PlayerChar::setupColliders() {
-//    glm::vec3 offset = glm::vec3(1.0f, 1.0f, 1.0f);
-//    glm::vec3 dims = glm::vec3(2.0f, 4.0f, 2.0f);
     auto *col = new Collider(getMeshes().at(0), CollisionTypes::None);
     colliders.push_back(col);
     displacement = new Collider(*col);
 
 }
+
 
 
 void PlayerChar::setupCamera() {
@@ -27,11 +26,9 @@ void PlayerChar::setupCamera() {
                     cameraDist * 10
             );
 
-    //camera.setProjectionAsPerspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1, cameraDist * 2);
 }
 
 glm::vec3 PlayerChar::getLanternAnchorPoint() {
-    //return lantern->getMeshes().at(0).center + getPos();
     return getRightVector() / 3.0f + glm::vec3(0, 0.8, 0) + getFrontVector() / 2.5f + getPos();
 }
 
@@ -51,7 +48,6 @@ void PlayerChar::doJump() {
             newPos.y = -getPos().y;
             isJumping = false;
         }
-        // << "jump vector: " << newPos.x << " " << newPos.y << " " << newPos.z << "\n";
         translateBy(newPos);
     }
 }
@@ -101,10 +97,6 @@ PlayerChar::PlayerChar(std::string const &playerCharPath, std::string const &lan
 
     this->lanternAnchorPoint = getLanternAnchorPoint();
 
-//    this->collider.origin = getColliderPos();
-//    this->collider.radius = 3.f;
-//    this->collider.squaredRadius = this->collider.radius * this->collider.radius;
-
     setupLantern();
     setupCamera();
     setupColliders();
@@ -136,14 +128,7 @@ void PlayerChar::translateBy(glm::vec3 vector) {
 
     Model::translateBy(vector);
 
-//    std::cout << displacement->getMax() << std::endl;
-//    std::cout << displacement->getMin() << std::endl;
     this->collider.origin = getColliderPos();
-//    std::cout << "dis start" << displacement->getBoxStart() << std::endl;
-//    std::cout << "dis max" << displacement->getBoxDimentions() << std::endl;
-//    std::cout << "col start" << colliders[0]->getBoxStart() << std::endl;
-//    std::cout << "col max" << colliders[0]->getBoxDimentions() << std::endl;
-
 
     setupCamera();
 }
@@ -157,9 +142,7 @@ void PlayerChar::setRotationAbsolute(float angle, glm::vec3 rotationAxis) {
 
 void PlayerChar::rotateBy(float angle, glm::vec3 rotationAxis) {
     Model::rotateBy(angle, rotationAxis);
-//		lantern->rotateBy(angle, glm::vec3(0,0,-1));
     lantern->rotateBy(angle, rotationAxis);
-//        lantern->translateBy(-this->getLanternAnchorPoint());
 }
 
 void
@@ -222,22 +205,13 @@ PlayerChar::processInput(GLFWwindow *window, float width, float height, float de
                 throwLantern(10.0f);
             }
 
-            if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
-                if(getIsLanternOn())
-                    setIsLanternOn(false);
-                else
-                {
-                    setIsLanternOn(true);
-                }
-            }
 
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
                 if (!isJumping)
                     jump();
             }
-
             updateLookAt(window, width, height, deltaTime);
-        }
+            }
     }
 }
 
@@ -245,12 +219,10 @@ void PlayerChar::updateLookAt(GLFWwindow *window, float width, float height, flo
     std::vector<glm::vec3> castResults = camera.getMouseCast(window, width, height);
 
 
-//	std::cout << camera.getMouseCast(window, width, height) << std::endl;
     glm::vec3 direction = castResults[0];
     glm::vec3 origin = castResults[1];
 
-    //float magnitude = -(origin.y / direction.y);
-//	std::cout << "direction.y : " <<  direction.y << "0 is no good" <<  std::endl;
+
     float magnitude = (getPos().y - origin.y) / direction.y;
 
     float x = origin.x + direction.x * magnitude;
@@ -276,10 +248,7 @@ void PlayerChar::updateLookAt(GLFWwindow *window, float width, float height, flo
     float angle = glm::acos(acosArg);
 
 
-    //std::cout << "lookAtPoint: " << lookAtPoint.x << " " << lookAtPoint.y << " " << lookAtPoint.z << "\n";
-    //std::cout << "origin: " << origin.x << " " << origin.y << " " << origin.z << "\n";
-    //std::cout << "direction: " << direction.x << " " << direction.y << " " << direction.z << "\n";
-    //std::cout << "angle: " << angle << "\n";
+
     if (crossProduct.y < 0)
         rotateBySpeed(angle, glm::vec3(0.0f, 1.0f, 0.0f), deltaTime);
     else {
@@ -346,7 +315,6 @@ bool PlayerChar::handleCollision(Model *otherModel) {
                 if (result.colType == CollisionTypes::Overlap) {
                     if (auto *temp = dynamic_cast<PickUps *>(otherModel)) {
                         pickupObject(temp);
-                        std::cout << "picking up" << std::endl;
                         deleted = true;
                     }
                 }
@@ -355,10 +323,7 @@ bool PlayerChar::handleCollision(Model *otherModel) {
                 xBlocked = true;
                 yBlocked = true;
                 zBlocked = true;
-//               std::cout << "x is touching " << xBlocked << std::endl;
-//               std::cout << "y is touching " << yBlocked << std::endl;
-//               std::cout << "z is touching " << zBlocked << std::endl;
-//               std::cout << "_______________\n";
+
             }
         }
     }
@@ -401,11 +366,4 @@ float PlayerChar::getBatteryDecayRate() {
     return this->batteryDecayRate;
 }
 
-bool PlayerChar::getIsLanternOn(){
-    return this->isLanternOn;
-}
-
-void PlayerChar::setIsLanternOn(bool power){
-    this->isLanternOn = power;
-}
 

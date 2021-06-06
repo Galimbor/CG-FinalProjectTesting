@@ -5,8 +5,6 @@ void PickUps::setupColliders() {
 
     glm::vec3 offset = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 dims = glm::vec3(2.0f, 4.0f, 2.0f);
-//    auto* col = new Collider(CollisionTypes::Type::Overlap,offset,dims);
-//    colliders.push_back(col);
     auto *col = new Collider(getMeshes().at(0), CollisionTypes::Overlap);
     colliders.push_back(col);
 

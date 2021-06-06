@@ -1,6 +1,5 @@
 #include "MovingBody.h"
 
-#include <glm/gtx/io.hpp>
 
 
 void MovingBody::setupColliders() {
@@ -8,9 +7,9 @@ void MovingBody::setupColliders() {
 
 MovingBody::MovingBody(glm::vec3 initialPos, glm::vec3 initialScale, float inicialRotationAngle,
                        glm::vec3 rotationAxis) {
-    setPosAbsolute(initialPos);
-    setScaleAbsolute(initialScale);
-    setRotationAbsolute(inicialRotationAngle, rotationAxis);
+    MovingBody::setPosAbsolute(initialPos);
+    MovingBody::setScaleAbsolute(initialScale);
+    MovingBody::setRotationAbsolute(inicialRotationAngle, rotationAxis);
     displacement = nullptr;
 }
 
@@ -89,10 +88,6 @@ void MovingBody::calcDisplacement(glm::vec3 direction, float deltaTime) {
 void MovingBody::translateBySpeed(glm::vec3 direction, float deltaTime) {
     glm::vec3 translation = direction * moveSpeed * deltaTime;
 
-//    if(xBlocked) {
-//        translateBy(glm::vec3(0,translation.y,translation.z));
-//    }
-//    else
     if (!(xBlocked && yBlocked && zBlocked))
         translateBy(translation);
 

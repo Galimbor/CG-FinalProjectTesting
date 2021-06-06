@@ -17,6 +17,7 @@ struct SphereCollision {
 class PlayerChar : public Model {
 public:
     Camera camera;
+    float cameraDist;
     Lantern *lantern = nullptr;
 
 protected:
@@ -26,7 +27,6 @@ private:
     glm::vec3 lanternAnchorPoint;
 
     bool holdingLantern = true;
-    float cameraDist;
     bool isLanternOn = true;
 
     void setupCamera();
@@ -62,6 +62,7 @@ public:
                     float cameraDist,
                     glm::vec3 cameraLookAtVector
             );
+
 
     bool isDead = false;
 
@@ -104,9 +105,5 @@ public:
     void setBatteryDecayRate(float rate);
 
     float getBatteryDecayRate();
-
-    bool getIsLanternOn();
-
-    void setIsLanternOn(bool power);
 };
 
