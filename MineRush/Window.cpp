@@ -89,7 +89,7 @@ void Window::doFrameLoop() {
                              "          GAME OVER\n"
                              "Your battery ran out and you are stuck inside the mine forever\n"
                              "===============================\n";
-                destroy();
+                glfwSetWindowShouldClose(window, true);
             }
             if (Syrian->victory) {
                 std::cout << "===============================\n"
@@ -97,9 +97,10 @@ void Window::doFrameLoop() {
                              "You were able to escape the mine and get back to your family, with " << Syrian->getScore()
                           << " pieces of gold\n"
                              "===============================\n";
-                destroy();
+                glfwSetWindowShouldClose(window, true);
             }
         }
+        destroy();
     }
 }
 
