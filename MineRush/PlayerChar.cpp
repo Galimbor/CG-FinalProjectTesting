@@ -17,8 +17,8 @@ void PlayerChar::setupCamera() {
 
     camera.setProjectionAsOrtho
             (
-                    -cameraDist / 2,
-                    cameraDist / 2,
+                    -cameraDist / 2 - 5,
+                    cameraDist / 2 + 5,
                     -cameraDist / 2,
                     cameraDist / 2,
                     0.0001,

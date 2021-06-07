@@ -30,8 +30,10 @@ public:
     void getWindowDimentions(float &width, float &height);
 
 private:
-    float width = 800;
-    float height = 800;
+    //float width = 800;
+    float width = 1920;
+    //float height = 800;
+    float height = 1080;
 
     float DeltaTime = 0.0f;
     float previousFrameTime = 0.0f;
