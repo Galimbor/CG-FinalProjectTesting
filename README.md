@@ -13,5 +13,8 @@ how to build:
   ```
   > make
   ```
-  in linux
-  or build it in vs in windows
+  in linux or build it in vs in windows
+1. to run in linux cd into build/MineRush and type the following:
+  ```
+  ./MineRush
+  ```
