@@ -10,9 +10,10 @@ protected:
 private:
     float batteryCharge = 0.0f;
     int score = 0;
+    bool isBear;
 
 public:
-    PickUps(std::string const &modelPath, float batteryCharge, int score);
+    PickUps(std::string const &modelPath, float batteryCharge, int score, bool isBear);
 
     void Draw(Shader &shader, float deltaTime) override;
 

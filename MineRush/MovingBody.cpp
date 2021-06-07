@@ -1,7 +1,6 @@
 #include "MovingBody.h"
 
 
-
 void MovingBody::setupColliders() {
 }
 

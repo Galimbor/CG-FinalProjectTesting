@@ -19,12 +19,14 @@ public:
     Camera camera;
     float cameraDist;
     Lantern *lantern = nullptr;
+    bool victory = false;
 
 protected:
     void setupColliders() override;
 
 private:
     glm::vec3 lanternAnchorPoint;
+
 
     bool holdingLantern = true;
     bool isLanternOn = true;
@@ -105,5 +107,7 @@ public:
     void setBatteryDecayRate(float rate);
 
     float getBatteryDecayRate();
+
+    int getScore();
 };
 

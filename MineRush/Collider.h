@@ -18,7 +18,7 @@ namespace CollisionTypes {
 struct CollisionResult {
     CollisionTypes::Type colType;
     bool isColliding = false;
-
+    bool isBear = false;
     bool xCollision = false;
     bool yCollision = false;
     bool zCollision = false;
@@ -29,6 +29,8 @@ class Collider {
 private:
     glm::vec3 max;
     glm::vec3 min;
+    bool isBear;
+
 
     glm::vec3 boxDimentions;
 
@@ -55,8 +57,7 @@ private:
 
 public:
 
-
-    Collider(class Mesh &mesh, CollisionTypes::Type type);
+    Collider(class Mesh &mesh, CollisionTypes::Type type, bool isBear);
 
     Collider();
 
@@ -86,5 +87,9 @@ public:
     glm::vec3 getBoxDimentions();
 
     void setBoxDimentions();
+
+    void setIsBear(bool state);
+
+    bool getIsBear();
 
 };

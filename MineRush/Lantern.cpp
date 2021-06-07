@@ -56,7 +56,7 @@ void Lantern::rotateBy(float angle, glm::vec3 rotationAxis) {
 void Lantern::setupColliders() {
     glm::vec3 offset = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 dims = glm::vec3(2.0f, 2.0f, 2.0f);
-    Collider *col = new Collider(getMeshes().at(0), CollisionTypes::Overlap);
+    Collider *col = new Collider(getMeshes().at(0), CollisionTypes::Overlap, false);
     colliders.push_back(col);
     displacement = new Collider(*col);
 
@@ -138,7 +138,7 @@ void Lantern::doBounces() {
         newPos.x = midAirPos.x;
         newPos.z = midAirPos.z;
     }
-   if (newPos.y < 0.0f) {
+    if (newPos.y < 0.0f) {
         newPos.y = 0.0f;
         bouncePos = newPos;
         bounceCount++;

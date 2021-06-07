@@ -58,7 +58,7 @@ void main()
     // Spotlight (soft edges)
     float theta = dot(lightDir, normalize(-light.direction));
     float epsilon = (light.cutOff - light.outerCutOff);
-    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0) * flashlightIntensity;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0) * flashlightIntensity * 8.0;
     diffuse  *= intensity;
     specular *= intensity;
 

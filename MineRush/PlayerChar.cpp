@@ -4,12 +4,11 @@
 
 
 void PlayerChar::setupColliders() {
-    auto *col = new Collider(getMeshes().at(0), CollisionTypes::None);
+    auto *col = new Collider(getMeshes().at(0), CollisionTypes::None, false);
     colliders.push_back(col);
     displacement = new Collider(*col);
 
 }
-
 
 
 void PlayerChar::setupCamera() {
@@ -211,7 +210,7 @@ PlayerChar::processInput(GLFWwindow *window, float width, float height, float de
                     jump();
             }
             updateLookAt(window, width, height, deltaTime);
-            }
+        }
     }
 }
 
@@ -246,7 +245,6 @@ void PlayerChar::updateLookAt(GLFWwindow *window, float width, float height, flo
     float acosArg = dotProduct / (lP_Magnitude * fV_Magnitude);
     acosArg = glm::clamp(acosArg, 0.0f, 1.0f);
     float angle = glm::acos(acosArg);
-
 
 
     if (crossProduct.y < 0)
@@ -313,6 +311,9 @@ bool PlayerChar::handleCollision(Model *otherModel) {
             result = displacement->isColliding(otherModel->colliders[j]);
             if (result.isColliding) {
                 if (result.colType == CollisionTypes::Overlap) {
+                    if (result.isBear) {
+                        victory = true;
+                    }
                     if (auto *temp = dynamic_cast<PickUps *>(otherModel)) {
                         pickupObject(temp);
                         deleted = true;
@@ -364,6 +365,10 @@ void PlayerChar::setBatteryDecayRate(float rate) {
 
 float PlayerChar::getBatteryDecayRate() {
     return this->batteryDecayRate;
+}
+
+int PlayerChar::getScore() {
+    return this->score;
 }
 
 

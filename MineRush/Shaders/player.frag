@@ -11,6 +11,7 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 uniform Material material;
+float light;
 
 uniform sampler2D texture_diffuse1;
 

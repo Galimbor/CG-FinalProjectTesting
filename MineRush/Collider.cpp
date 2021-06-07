@@ -7,10 +7,11 @@
 #include "Mesh.h"
 #include <glm/gtx/io.hpp>
 
-Collider::Collider(Mesh &mesh, CollisionTypes::Type type) {
+Collider::Collider(Mesh &mesh, CollisionTypes::Type type, bool isBear) {
     this->colType = type;
     this->max = glm::vec3(-INFINITY, -INFINITY, -INFINITY);
     this->min = glm::vec3(INFINITY, INFINITY, INFINITY);
+    this->isBear = isBear;
 
     // std::cout << size << std::endl;
     for (const auto &vertice : mesh.vertices) {
@@ -66,6 +67,7 @@ CollisionResult Collider::isColliding(Collider *otherCollider) {
 
     result.isColliding = result.xCollision && result.yCollision && result.zCollision;
     result.colType = otherCollider->colType;
+    result.isBear = otherCollider->getIsBear();
     return result;
 }
 
@@ -279,6 +281,15 @@ glm::vec3 Collider::getBoxDimentions() {
 
 void Collider::setBoxDimentions() {
     boxDimentions = abs(max - min);
+}
+
+void Collider::setIsBear(bool state) {
+    this->isBear = state;
+
+}
+
+bool Collider::getIsBear() {
+    return isBear;
 }
 
 Collider::Collider() = default;

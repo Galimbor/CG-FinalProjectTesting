@@ -3,7 +3,7 @@
 
 void Maze::setupColliders() {
     for (int i = 0; i < getMeshes().size(); ++i) {
-        auto *col = new Collider(getMeshes().at(i), CollisionTypes::Block);
+        auto *col = new Collider(getMeshes().at(i), CollisionTypes::Block, false);
         colliders.push_back(col);
     }
 

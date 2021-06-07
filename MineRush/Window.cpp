@@ -35,12 +35,14 @@ void Window::doFrameLoop() {
             GLint lightSpotOuterCutOffLoc = glGetUniformLocation(mainShader->ID, "light.outerCutOff");
             glUniform1f(lightSpotCutOffLoc, glm::cos(glm::radians(Syrian->lantern->getInnerLightRadius())));
             glUniform1f(lightSpotOuterCutOffLoc, glm::cos(glm::radians(Syrian->lantern->getOuterLightRadius())));
-            glUniform3f(lightPosLoc, Syrian->lantern->getPos().x, Syrian->lantern->getPos().y,
+            glUniform3f(lightPosLoc, Syrian->lantern->getPos().x-0.3f, Syrian->lantern->getPos().y + 0.5f,
                         Syrian->lantern->getPos().z);
             glUniform3f(lightSpotdirLoc, Syrian->lantern->getFrontVector().x, Syrian->lantern->getFrontVector().y,
                         Syrian->lantern->getFrontVector().z);
 
             glUniform3f(viewPosLoc, Syrian->getPos().x, Syrian->getPos().y + 0.8, Syrian->getPos().z);
+
+//            glUniform1f(glGetUniformLocation(playerShader->ID, "light"), 1.0);
 
             // Set lights properties
             glUniform3f(glGetUniformLocation(mainShader->ID, "light.ambient"), 0.5, 0.5, 0.5);
@@ -54,8 +56,7 @@ void Window::doFrameLoop() {
             glUniform1f(glGetUniformLocation(mainShader->ID, "light.quadratic"), 0.032f);
             glUniform1f(glGetUniformLocation(mainShader->ID, "material.shininess"), 32.0f);
             glUniform1f(glGetUniformLocation(mainShader->ID, "flashlightIntensity"),
-                            Syrian->getBatteryPercent() * Syrian->getBatteryDecayRate() / 5);
-
+                        Syrian->getBatteryPercent() * Syrian->getBatteryDecayRate() / 5);
 
 
             glEnable(GL_DEPTH_TEST);
@@ -72,7 +73,6 @@ void Window::doFrameLoop() {
 
             Syrian->Draw(*playerShader, *mainShader);
             mainShader->Activate();
-//            std::cout << Syrian->getBatteryPercent() << std::endl;
             Syrian->handleLanternWallCollision(objectsInScene);
             Syrian->camera.setActiveCamera(*playerShader, *mainShader);
 
@@ -83,8 +83,23 @@ void Window::doFrameLoop() {
             glfwSwapBuffers(window);
 
             glfwPollEvents();
+
+            if (Syrian->isDead) {
+                std::cout << "===============================\n"
+                             "          GAME OVER\n"
+                             "Your battery ran out and you are stuck inside the mine forever\n"
+                             "===============================\n";
+                destroy();
+            }
+            if (Syrian->victory) {
+                std::cout << "===============================\n"
+                             "         CONGRATULATIONS\n"
+                             "You were able to escape the mine and get back to your family, with " << Syrian->getScore()
+                          << " pieces of gold\n"
+                             "===============================\n";
+                destroy();
+            }
         }
-        destroy();
     }
 }
 
@@ -117,53 +132,70 @@ void Window::setupScene() {
 
     char MazeModelPath[] = "Models/maze_sem_chao.obj";
     char FloorModelPath[] = "Models/chao.obj";
-    char Battery1ModelPath[] = "Models/pilha.obj";
-    char Battery2ModelPath[] = "Models/pilha2.obj";
-    char Battery3ModelPath[] = "Models/pilha3.obj";
-    char Battery4ModelPath[] = "Models/pilha4.obj";
-    char Battery5ModelPath[] = "Models/pilha5.obj";
-    char Battery6ModelPath[] = "Models/pilha6.obj";
+    char Battery1ModelPath[] = "Models/battery1.obj";
+    char Battery2ModelPath[] = "Models/battery2.obj";
+    char Battery3ModelPath[] = "Models/battery3.obj";
+    char Battery4ModelPath[] = "Models/battery4.obj";
+    char Battery5ModelPath[] = "Models/battery5.obj";
+    char Battery6ModelPath[] = "Models/battery6.obj";
+    char Battery7ModelPath[] = "Models/battery7.obj";
     char UrsoModelPath[] = "Models/urso.obj";
+    char Gold1ModelPath[] = "Models/ouro1.obj";
+    char Gold2ModelPath[] = "Models/ouro2.obj";
+    char Gold3ModelPath[] = "Models/ouro3.obj";
+    char Gold4ModelPath[] = "Models/ouro4.obj";
+    char Gold5ModelPath[] = "Models/ouro5.obj";
 
     auto *maze = new Maze(MazeModelPath);
     auto *floor = new Maze(FloorModelPath);
-    auto *urso = new PickUps(UrsoModelPath, 0, 9999);
-    auto *pilha = new PickUps(Battery1ModelPath, 40.0f, 0);
-    auto *pilha2 = new PickUps(Battery2ModelPath, 100.0f, 0);
-    auto *pilha3 = new PickUps(Battery3ModelPath, 100.0f, 0);
-    auto *pilha4 = new PickUps(Battery4ModelPath, 100.0f, 0);
-    auto *pilha5 = new PickUps(Battery5ModelPath, 100.0f, 0);
-    auto *pilha6 = new PickUps(Battery6ModelPath, 100.0f, 0);
+    auto *gold1 = new PickUps(Gold1ModelPath, 0, 1, false);
+    auto *gold2 = new PickUps(Gold2ModelPath, 0, 1, false);
+    auto *gold3 = new PickUps(Gold3ModelPath, 0, 1, false);
+    auto *gold4 = new PickUps(Gold4ModelPath, 0, 1, false);
+    auto *gold5 = new PickUps(Gold5ModelPath, 0, 1, false);
+    auto *urso = new PickUps(UrsoModelPath, 0, 0, true);
+    auto *pilha = new PickUps(Battery1ModelPath, 40.0f, 0, false);
+    auto *pilha2 = new PickUps(Battery2ModelPath, 100.0f, 0, false);
+    auto *pilha3 = new PickUps(Battery3ModelPath, 100.0f, 0, false);
+    auto *pilha4 = new PickUps(Battery4ModelPath, 100.0f, 0, false);
+    auto *pilha5 = new PickUps(Battery5ModelPath, 100.0f, 0, false);
+    auto *pilha6 = new PickUps(Battery6ModelPath, 100.0f, 0, false);
+    auto *pilha7 = new PickUps(Battery7ModelPath, 100.0f, 0, false);
 
     objectsInScene.push_back(maze);
     objectsInScene.push_back(floor);
     objectsInScene.push_back(urso);
+    objectsInScene.push_back(gold1);
+    objectsInScene.push_back(gold2);
+    objectsInScene.push_back(gold3);
+    objectsInScene.push_back(gold4);
+    objectsInScene.push_back(gold5);
     objectsInScene.push_back(pilha);
     objectsInScene.push_back(pilha2);
     objectsInScene.push_back(pilha3);
     objectsInScene.push_back(pilha4);
     objectsInScene.push_back(pilha5);
     objectsInScene.push_back(pilha6);
+    objectsInScene.push_back(pilha7);
 }
 
 void Window::destroy() const {
     mainShader->Delete();
     playerShader->Delete();
-
     glfwDestroyWindow(window);
     glfwTerminate();
 }
 
 
 void
-Window::processInput(GLFWwindow *window)  {
+Window::processInput(GLFWwindow *window) {
     {
 
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
         }
 
-        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
             Window::setupScene();
         }
 
