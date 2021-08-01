@@ -2,7 +2,7 @@
 
 ## Description
 
-This is the last project developed during the subject of Computer Graphcis of my bachelors degree in Informatic Engineering. This game was developed using C++ and openGL. It uses Phong-lighting as its lighting model, it has colision detection implemented and also has some physics implemented like gravity when jumping and being able to throw things, where they go with an hiperbole trajectory. The models were developed using Blender. 
+This is the last project developed during the subject of Computer Graphics of my bachelors degree in Informatics Engineering. This game was developed using C++ and openGL. It uses Phong-lighting as its lighting model, it has colision detection implemented and also has some physics implemented like gravity when jumping and being able to throw things, where they go with an hiperbole trajectory. The models were developed using Blender. 
 
 
 
